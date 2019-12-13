@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "General Note",
+    "content": "The Last Fani Furi",
+    "notebookId": 1
+  },
+  {
+    "id": 2,
+    "title": "Zeneral Noteyy",
+    "content": "yathartha",
+    "notebookId": 1
+  },
+  {
+    "id": 3,
+    "title": "Barack Obama",
+    "content": "President knee grow",
+    "notebookId": 2
+  },
+  {
+    "id": 4,
+    "title": "Ajju Subedi",
+    "content": "Gamer/BodyBuilder knee grow",
+    "notebookId": 2
+  },
+  {
+    "id": 5,
+    "title": "Dilip Raimuji",
+    "content": "Bed ma runay",
+    "notebookId": 3
+  },
+  {
+    "id": 6,
+    "title": "Gangstaa Dai",
+    "content": "Kassam hola talai jiwan variii...",
+    "notebookId": 3
+  }
+]

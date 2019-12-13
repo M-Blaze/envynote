@@ -1,8 +1,8 @@
 import React from "react";
-import "./App.css";
-
+import "./App.scss";
+import Router from "./router";
 function App() {
-  return <div id="wrapper">ENVY NOTE</div>;
+  return <Router />;
 }
 
 export default App;
