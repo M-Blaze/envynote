@@ -1,5 +1,5 @@
-import notebooks from "../api/note-books.json";
-import notes from "../api/notes.json";
+import notebooks from "../data/note-book.json";
+import notes from "../data/notes.json";
 
 export const fetchNotebooks = () => {
   return new Promise(resolve => {
@@ -13,5 +13,12 @@ export const fetchNotes = id => {
   });
   return new Promise(resolve => {
     resolve(filteredNotes);
+  });
+};
+
+export const fetchActiveNotebook = id => {
+  const activeNotebook = notebooks.find(notebook => notebook.id === id);
+  return new Promise(resolve => {
+    resolve(activeNotebook);
   });
 };

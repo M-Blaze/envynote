@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import NotesIcon from "@material-ui/icons/Notes";
-import { fetchNotebooks } from "../../../store/action";
+import { fetchNotebooks, setActiveNotebook } from "../../../store/action";
 
 class Sidebar extends Component {
   componentDidMount() {
@@ -22,7 +22,11 @@ class Sidebar extends Component {
         <div className="notebooks-list">
           {this.props.notebooks.map(notebook => {
             return (
-              <Link key={notebook.id} to={`/notebooks/${notebook.id}`}>
+              <Link
+                key={notebook.id}
+                onClick={() => this.props.setActiveNotebook(notebook.id)}
+                to={`/notebooks/${notebook.name}`}
+              >
                 <div className="notebook">
                   <div className="icon-wrap">
                     <NotesIcon />
@@ -47,4 +51,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { fetchNotebooks })(Sidebar);
+export default connect(mapStateToProps, { fetchNotebooks, setActiveNotebook })(
+  Sidebar
+);
