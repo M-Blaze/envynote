@@ -22,7 +22,7 @@ class Sidebar extends Component {
         <div className="notebooks-list">
           {this.props.notebooks.map(notebook => {
             return (
-              <Link to={`/notebooks/${notebook.id}`}>
+              <Link key={notebook.id} to={`/notebooks/${notebook.id}`}>
                 <div className="notebook">
                   <div className="icon-wrap">
                     <NotesIcon />
