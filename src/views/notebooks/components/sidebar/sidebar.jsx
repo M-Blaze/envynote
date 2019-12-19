@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import AddIcon from "@material-ui/icons/Add";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import NotesIcon from "@material-ui/icons/Notes";
-import { fetchNotebooks, setActiveNotebook } from "../../../store/action";
+import { fetchNotebooks, setActiveNotebook } from "../../../../store/action";
+import AddNote from "./components/createNotebook";
+import { withRouter } from "react-router-dom";
 
 class Sidebar extends Component {
   componentDidMount() {
@@ -15,9 +16,7 @@ class Sidebar extends Component {
       <div className="notebook-bar">
         <div className="block-title">
           <h3>Notebook</h3>
-          <div className="icon-holder">
-            <AddIcon />
-          </div>
+          <AddNote />
         </div>
         <div className="notebooks-list">
           {this.props.notebooks.map(notebook => {
@@ -25,7 +24,7 @@ class Sidebar extends Component {
               <Link
                 key={notebook.id}
                 onClick={() => this.props.setActiveNotebook(notebook.id)}
-                to={`/notebooks/${notebook.name}`}
+                to={`/notebooks/${notebook.id}`}
               >
                 <div className="notebook">
                   <div className="icon-wrap">
@@ -51,6 +50,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { fetchNotebooks, setActiveNotebook })(
-  Sidebar
+export default withRouter(
+  connect(mapStateToProps, { fetchNotebooks, setActiveNotebook })(Sidebar)
 );

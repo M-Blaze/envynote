@@ -1,6 +1,10 @@
-import { fetchNotebooks as fetchNotebooksApi } from "../api/notebooks";
-import { fetchNotes as fetchNotesApi } from "../api/notebooks";
-import { fetchActiveNotebook } from "../api/notebooks";
+import {
+  addNote as addNoteApi,
+  addNotebook as addNotebookApi,
+  fetchActiveNotebook,
+  fetchNotebooks as fetchNotebooksApi,
+  fetchNotes as fetchNotesApi
+} from "../api/notebooks";
 
 export const fetchNotebooks = () => dispatch => {
   fetchNotebooksApi().then(notebooks => {
@@ -25,6 +29,24 @@ export const setActiveNotebook = notebookId => dispatch => {
     dispatch({
       type: "SET_ACTIVE_NOTEBOOK",
       payload: notebook
+    });
+  });
+};
+
+export const addNotebook = notebookName => (dispatch, getState) => {
+  addNotebookApi(notebookName).then(notebook => {
+    dispatch({
+      type: "SET_NOTEBOOKS",
+      payload: getState().notebooks.concat([notebook])
+    });
+  });
+};
+
+export const addNote = note => (dispatch, getState) => {
+  addNoteApi(note).then(newNote => {
+    dispatch({
+      type: "SET_NOTES",
+      payload: getState().notes.concat([newNote])
     });
   });
 };

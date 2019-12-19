@@ -1,13 +1,17 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import Notebooks from "../views/notebooks";
-const Router = () => {
+
+const Router = props => {
   return (
     <BrowserRouter>
       <MainLayout>
         <Switch>
-          <Route path="/" component={Notebooks} />
+          <Redirect from="/" to="/notebooks/1" exact />
+          <Route path="/">
+            <Notebooks />
+          </Route>
         </Switch>
       </MainLayout>
     </BrowserRouter>

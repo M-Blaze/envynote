@@ -1,14 +1,22 @@
 import React, { Component } from "react";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import NotesIcon from "@material-ui/icons/Notes";
+import { fetchNotes, setActiveNotebook } from "../../../store/action";
 import { connect } from "react-redux";
-import { fetchNotes } from "../../../store/action";
+import AddNotes from "./sidebar/components/addNotes";
+import { withRouter } from "react-router-dom";
+
 class Notes extends Component {
+  componentDidMount() {
+    this.props.setActiveNotebook(parseInt(this.props.match.params.slug));
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.activeNotebook !== this.props.activeNotebook) {
       this.props.fetchNotes(this.props.activeNotebook.id);
     }
   }
+
   render() {
     return (
       <div className="notebook-content">
@@ -18,7 +26,7 @@ class Notes extends Component {
           </div>
           <div className="title-text">{this.props.activeNotebook.name}</div>
           <div className="icon-holder">
-            <MoreHorizIcon />
+            <AddNotes />
           </div>
         </div>
         <div className="card-block">
@@ -50,4 +58,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { fetchNotes })(Notes);
+export default withRouter(
+  connect(mapStateToProps, { fetchNotes, setActiveNotebook })(Notes)
+);

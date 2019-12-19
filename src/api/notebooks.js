@@ -12,6 +12,10 @@ function getNotes() {
   return [...JSON.parse(notes)];
 }
 
+function setNotes(note) {
+  localStorage.setItem("notes", JSON.stringify(note));
+}
+
 export const fetchNotebooks = () => {
   return new Promise(resolve => {
     resolve(getNotebooks());
@@ -45,5 +49,21 @@ export const addNotebook = name => {
   setNotebooks(notebooks);
   return new Promise(resolve => {
     resolve(newNotebook);
+  });
+};
+
+export const addNote = note => {
+  const notes = getNotes();
+  const lastNote = notes[notes.length - 1];
+  const newNote = {
+    id: lastNote.id + 1,
+    title: note.title,
+    content: note.content,
+    notebookId: note.notebookId
+  };
+  notes.push(newNote);
+  setNotes(notes);
+  return new Promise(resolve => {
+    resolve(newNote);
   });
 };
