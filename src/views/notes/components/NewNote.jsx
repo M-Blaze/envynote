@@ -28,9 +28,6 @@ function NewNote(props) {
   return (
     <div className="newNote-block">
       <form onSubmit={handleSubmit}>
-        <div className="form-title">
-          <h2>New Note</h2>
-        </div>
         <div className="input-group title-block">
           <input
             ref={titleRef}
@@ -49,7 +46,7 @@ function NewNote(props) {
         </div>
         <div className="button-group">
           <button className="btn btn-primary" type="submit">
-            Createe Note
+            Create
           </button>
         </div>
       </form>

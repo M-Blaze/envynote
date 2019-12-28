@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import NotesIcon from "@material-ui/icons/Notes";
 import { fetchNotebooks, setActiveNotebook } from "../../../../store/action";
 import AddNotebook from "./components/createNotebook";
 import NotebookMenu from "../../../../components/NotebookMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 class Sidebar extends Component {
   componentDidMount() {
@@ -36,7 +37,7 @@ class Sidebar extends Component {
                   >
                     <div className="notebook">
                       <div className="icon-wrap">
-                        <NotesIcon />
+                        <FontAwesomeIcon icon={faBook} />
                       </div>
                       <div className="notebook-title">{notebook.name}</div>
                     </div>

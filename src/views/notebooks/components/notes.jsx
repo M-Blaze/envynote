@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import NotesIcon from "@material-ui/icons/Notes";
+import AddIcon from "@material-ui/icons/Add";
 import { fetchNotes, setActiveNotebook } from "../../../store/action";
 import { connect } from "react-redux";
-import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import NoteMenu from "../../../components/NoteMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 class Notes extends Component {
   componentDidUpdate(prevProps) {
@@ -18,16 +19,22 @@ class Notes extends Component {
     );
   };
 
+  editRedirectHandler = id => {
+    this.props.history.push(
+      `/notebook/${this.props.activeNotebook.id}/notes/${id}/edit`
+    );
+  };
+
   render() {
     return (
       <div className="notebook-content">
         <div className="block-title">
           <div className="icon-wrapper">
-            <NotesIcon />
+            <FontAwesomeIcon icon={faBook} />
           </div>
           <div className="title-text">{this.props.activeNotebook.name}</div>
           <div onClick={this.redirectHandler} className="icon-holder">
-            <NoteAddIcon />
+            <AddIcon />
           </div>
         </div>
         <div className="card-block">
@@ -35,7 +42,9 @@ class Notes extends Component {
             return (
               <div className="card" key={note.id}>
                 <div className="card-title">
-                  <h4>{note.title}</h4>
+                  <h4 onClick={() => this.editRedirectHandler(note.id)}>
+                    {note.title}
+                  </h4>
                   <NoteMenu
                     horizontal="true"
                     noteData={note}
