@@ -13,8 +13,6 @@ class Notes extends Component {
   }
 
   redirectHandler = () => {
-    console.log(this.props);
-
     this.props.history.push(
       `/notebook/${this.props.activeNotebook.id}/notes/new`
     );

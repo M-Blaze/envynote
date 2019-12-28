@@ -16,7 +16,7 @@ const reducer = (state, action) => {
         activeNotebook: payload
       };
 
-    case "SET_ACTIVENOTE":
+    case "SET_ACTIVE_NOTE":
       return {
         ...state,
         activeNote: payload

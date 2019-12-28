@@ -8,7 +8,14 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { deleteNotebook } from "../store/action";
 
-function SimpleMenu({ history, deleteNotebook, notebookId, path, horizontal }) {
+function SimpleMenu({
+  history,
+  deleteNotebook,
+  notebookId,
+  path,
+  horizontal,
+  activeNotebook
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -20,12 +27,17 @@ function SimpleMenu({ history, deleteNotebook, notebookId, path, horizontal }) {
   };
 
   function redirectHandler() {
+    handleClose();
     history.push(`${path}/edit`);
   }
 
-  function deleteHandler(e, id) {
+  function deleteHandler(id) {
+    const updatedData = {
+      id,
+      activeNotebookId: activeNotebook.id
+    };
     handleClose();
-    deleteNotebook(id);
+    deleteNotebook(updatedData);
   }
 
   return (
@@ -45,7 +57,7 @@ function SimpleMenu({ history, deleteNotebook, notebookId, path, horizontal }) {
         onClose={handleClose}
       >
         <MenuItem onClick={redirectHandler}>Edit</MenuItem>
-        <MenuItem onClick={e => deleteHandler(e, notebookId)}>Delete</MenuItem>
+        <MenuItem onClick={() => deleteHandler(notebookId)}>Delete</MenuItem>
       </Menu>
     </div>
   );
@@ -55,4 +67,12 @@ SimpleMenu.defaultProps = {
   horizontal: false
 };
 
-export default withRouter(connect(null, { deleteNotebook })(SimpleMenu));
+const mapStateToProps = state => {
+  return {
+    activeNotebook: state.activeNotebook
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, { deleteNotebook })(SimpleMenu)
+);

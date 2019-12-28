@@ -8,7 +8,14 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { deleteNote } from "../store/action";
 
-function SimpleMenu({ history, deleteNote, noteData, path, horizontal }) {
+function SimpleMenu({
+  history,
+  deleteNote,
+  noteData,
+  path,
+  horizontal,
+  activeNote
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -24,8 +31,9 @@ function SimpleMenu({ history, deleteNote, noteData, path, horizontal }) {
   }
 
   function deleteHandler(data) {
+    const updatedData = { ...data, activeNoteId: activeNote.id };
     handleClose();
-    deleteNote(data);
+    deleteNote(updatedData);
   }
 
   return (
@@ -55,4 +63,10 @@ SimpleMenu.defaultProps = {
   horizontal: false
 };
 
-export default withRouter(connect(null, { deleteNote })(SimpleMenu));
+const mapStateToProps = state => {
+  return {
+    activeNote: state.activeNote
+  };
+};
+
+export default withRouter(connect(mapStateToProps, { deleteNote })(SimpleMenu));

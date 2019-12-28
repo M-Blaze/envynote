@@ -40,6 +40,7 @@ export const fetchActiveNotebook = id => {
 
 export const fetchActiveNote = id => {
   const activeNote = getNotes().find(note => note.id === id);
+
   return new Promise(resolve => {
     resolve(activeNote);
   });
@@ -59,25 +60,37 @@ export const addNotebook = name => {
   });
 };
 
-export const deleteNotebook = id => {
-  const newNotebooks = getNotebooks().filter(notebook => notebook.id !== id);
-  const newNotes = getNotes().filter(notebook => notebook.notebookId !== id);
-  setNotebooks(newNotebooks);
+export const deleteNotebook = data => {
+  const notebooks = getNotebooks();
+  const newNotebooks = notebooks.filter(notebook => notebook.id !== data.id);
+  const newNotes = getNotes().filter(note => note.notebookId !== data.id);
   setNotes(newNotes);
+  setNotebooks(newNotebooks);
+  if (data.id === data.activeNotebookId) {
+    const index = notebooks.findIndex(notebook => notebook.id === data.id);
+    const activeNotebook = newNotebooks[index - 1];
+    const activeNotes = newNotes.filter(note => note.id === activeNotebook.id);
+    return new Promise(resolve => {
+      resolve({ newNotebooks, activeNotes, activeNotebook });
+    });
+  }
   return new Promise(resolve => {
-    resolve({ newNotebooks, newNotes });
+    resolve({ newNotebooks });
   });
 };
 
 export const addNote = note => {
   const notes = getNotes();
-  const lastNote = notes[notes.length - 1];
   const newNote = {
-    id: lastNote.id + 1,
+    id: 1,
     title: note.title,
     content: note.content,
     notebookId: note.notebookId
   };
+  if (notes.length > 0) {
+    const lastNote = notes[notes.length - 1];
+    newNote.id = lastNote.id + 1;
+  }
   notes.push(newNote);
   setNotes(notes);
   return new Promise(resolve => {
@@ -86,13 +99,38 @@ export const addNote = note => {
 };
 
 export const deleteNote = data => {
-  const newNotes = getNotes().filter(note => note.id !== data.id);
+  const notes = getNotes();
+  const newNotes = notes.filter(note => note.id !== data.id);
   setNotes(newNotes);
   const filteredNotes = newNotes.filter(
     note => note.notebookId === data.notebookId
   );
+
+  if (data.id === data.activeNoteId) {
+    const index = notes
+      .filter(note => note.notebookId === data.notebookId)
+      .findIndex(note => note.id === data.id);
+    const arrLength = filteredNotes.length;
+    let newActiveNote;
+    if (arrLength > 1) {
+      if (index === 0) {
+        newActiveNote = filteredNotes[index];
+      } else {
+        newActiveNote = filteredNotes[index - 1];
+      }
+    } else if (arrLength === 1) {
+      newActiveNote = filteredNotes[0];
+    } else {
+      newActiveNote = [];
+    }
+
+    return new Promise(resolve => {
+      resolve({ filteredNotes, newActiveNote });
+    });
+  }
+
   return new Promise(resolve => {
-    resolve(filteredNotes);
+    resolve({ filteredNotes });
   });
 };
 

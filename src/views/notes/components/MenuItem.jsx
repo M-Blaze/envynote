@@ -3,8 +3,6 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import NoteMenu from "../../../components/NoteMenu";
 function MenuItem(props) {
-  console.log(props);
-
   return (
     <ul className="notes-list">
       {props.notes.map(note => {
