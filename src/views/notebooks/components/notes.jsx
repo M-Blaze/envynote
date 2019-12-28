@@ -1,21 +1,24 @@
 import React, { Component } from "react";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import NotesIcon from "@material-ui/icons/Notes";
 import { fetchNotes, setActiveNotebook } from "../../../store/action";
 import { connect } from "react-redux";
-import AddNotes from "./sidebar/components/addNotes";
-import { withRouter } from "react-router-dom";
+import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import NoteMenu from "../../../components/NoteMenu";
 
 class Notes extends Component {
-  componentDidMount() {
-    this.props.setActiveNotebook(parseInt(this.props.match.params.slug));
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.activeNotebook !== this.props.activeNotebook) {
       this.props.fetchNotes(this.props.activeNotebook.id);
     }
   }
+
+  redirectHandler = () => {
+    console.log(this.props);
+
+    this.props.history.push(
+      `/notebook/${this.props.activeNotebook.id}/notes/new`
+    );
+  };
 
   render() {
     return (
@@ -25,8 +28,8 @@ class Notes extends Component {
             <NotesIcon />
           </div>
           <div className="title-text">{this.props.activeNotebook.name}</div>
-          <div className="icon-holder">
-            <AddNotes />
+          <div onClick={this.redirectHandler} className="icon-holder">
+            <NoteAddIcon />
           </div>
         </div>
         <div className="card-block">
@@ -35,9 +38,11 @@ class Notes extends Component {
               <div className="card" key={note.id}>
                 <div className="card-title">
                   <h4>{note.title}</h4>
-                  <div className="icon-holder">
-                    <MoreHorizIcon />
-                  </div>
+                  <NoteMenu
+                    horizontal="true"
+                    noteData={note}
+                    path={`/notebook/${this.props.activeNotebook.id}/notes/${note.id}`}
+                  />
                 </div>
                 <div className="card-content">
                   <p>{note.content}</p>
@@ -58,6 +63,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, { fetchNotes, setActiveNotebook })(Notes)
+export default connect(mapStateToProps, { fetchNotes, setActiveNotebook })(
+  Notes
 );

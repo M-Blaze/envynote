@@ -1,7 +1,8 @@
 const state = {
   notebooks: [],
   activeNotebook: {},
-  notes: []
+  notes: [],
+  activeNote: {}
 };
 
 export default state;

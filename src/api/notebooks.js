@@ -38,6 +38,13 @@ export const fetchActiveNotebook = id => {
   });
 };
 
+export const fetchActiveNote = id => {
+  const activeNote = getNotes().find(note => note.id === id);
+  return new Promise(resolve => {
+    resolve(activeNote);
+  });
+};
+
 export const addNotebook = name => {
   const notebooks = getNotebooks();
   const lastNotebook = notebooks[notebooks.length - 1];
@@ -49,6 +56,16 @@ export const addNotebook = name => {
   setNotebooks(notebooks);
   return new Promise(resolve => {
     resolve(newNotebook);
+  });
+};
+
+export const deleteNotebook = id => {
+  const newNotebooks = getNotebooks().filter(notebook => notebook.id !== id);
+  const newNotes = getNotes().filter(notebook => notebook.notebookId !== id);
+  setNotebooks(newNotebooks);
+  setNotes(newNotes);
+  return new Promise(resolve => {
+    resolve({ newNotebooks, newNotes });
   });
 };
 
@@ -65,5 +82,32 @@ export const addNote = note => {
   setNotes(notes);
   return new Promise(resolve => {
     resolve(newNote);
+  });
+};
+
+export const deleteNote = data => {
+  const newNotes = getNotes().filter(note => note.id !== data.id);
+  setNotes(newNotes);
+  const filteredNotes = newNotes.filter(
+    note => note.notebookId === data.notebookId
+  );
+  return new Promise(resolve => {
+    resolve(filteredNotes);
+  });
+};
+
+export const editNote = data => {
+  const notes = getNotes();
+  const targetNote = notes.find(note => note.id === data.id);
+  const targetIndex = notes.indexOf(targetNote);
+  targetNote.title = data.title;
+  targetNote.content = data.content;
+  notes[targetIndex] = targetNote;
+  setNotes(notes);
+  const filteredNotes = notes.filter(note => {
+    return note.notebookId === data.notebookId;
+  });
+  return new Promise(resolve => {
+    resolve({ filteredNotes, targetNote });
   });
 };

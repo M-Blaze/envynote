@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
 import Sidebar from "./components/sidebar";
-import Notes from "./components/notes";
+import Notes from "./components/Notes";
+import { Route, Redirect } from "react-router-dom";
 class Notebooks extends Component {
   render() {
     return (
       <React.Fragment>
-        <Sidebar />
-        <Route path="/notebooks/:slug" exact>
-          <Notes />
-        </Route>
+        {this.props.location.pathname === "/" && <Redirect to="/notebooks/1" />}
+        <Route path="/notebooks/:id" component={Sidebar} />
+        <Route path="/notebooks/:id" component={Notes} />
       </React.Fragment>
     );
   }

@@ -1,9 +1,13 @@
 import {
   addNote as addNoteApi,
   addNotebook as addNotebookApi,
+  deleteNotebook as deleteNotebookApi,
   fetchActiveNotebook,
   fetchNotebooks as fetchNotebooksApi,
-  fetchNotes as fetchNotesApi
+  fetchNotes as fetchNotesApi,
+  fetchActiveNote,
+  deleteNote as deleteNoteApi,
+  editNote as editNoteApi
 } from "../api/notebooks";
 
 export const fetchNotebooks = () => dispatch => {
@@ -42,11 +46,55 @@ export const addNotebook = notebookName => (dispatch, getState) => {
   });
 };
 
+export const deleteNotebook = id => dispatch => {
+  deleteNotebookApi(id).then(({ newNotebooks: notebooks, newNotes: notes }) => {
+    dispatch({
+      type: "SET_NOTEBOOKS",
+      payload: notebooks
+    });
+    dispatch({
+      type: "SET_NOTES",
+      payload: notes
+    });
+  });
+};
+
 export const addNote = note => (dispatch, getState) => {
   addNoteApi(note).then(newNote => {
     dispatch({
       type: "SET_NOTES",
       payload: getState().notes.concat([newNote])
+    });
+  });
+};
+
+export const setActiveNote = id => dispatch => {
+  fetchActiveNote(id).then(activeNote => {
+    dispatch({
+      type: "SET_ACTIVENOTE",
+      payload: activeNote
+    });
+  });
+};
+
+export const editNote = data => dispatch => {
+  editNoteApi(data).then(({ filteredNotes: notes, targetNote: activeNote }) => {
+    dispatch({
+      type: "SET_NOTES",
+      payload: notes
+    });
+    dispatch({
+      type: "SET_ACTIVENOTE",
+      payload: activeNote
+    });
+  });
+};
+
+export const deleteNote = data => dispatch => {
+  deleteNoteApi(data).then(notes => {
+    dispatch({
+      type: "SET_NOTES",
+      payload: notes
     });
   });
 };
