@@ -62,6 +62,17 @@ p {
 input,
 textarea {
   font: inherit;
+  border: 1px solid #c3c3c3;
+  color: #000000;
+
+  &:focus {
+    border-color: #ccc;
+    background: #ccc;
+  }
+
+  &::placeholder {
+    color: #000000;
+  }
 }
 
 .btn {
@@ -756,6 +767,11 @@ textarea {
       }
     }
   }
+}
+
+.edit-btn {
+  padding: 5px;
+  text-align: center;
 }
 
 .newNote-block {

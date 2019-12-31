@@ -6,17 +6,37 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { deleteNotebook } from "../store/action";
+import { deleteNotebook, editNotebook } from "../store/action";
+import NotebookModal from "../views/notebooks/components/sidebar/components/NotebookModal";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme =>
+  createStyles({
+    menuItem: {
+      padding: theme.spacing(0),
+      display: "block"
+    }
+  })
+);
 
 function SimpleMenu({
-  history,
   deleteNotebook,
-  notebookId,
-  path,
   horizontal,
-  activeNotebook
+  activeNotebook,
+  inputVal: { id: notebookId, name: notebookName },
+  editNotebook
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const classes = useStyles();
+  const modalProps = {
+    title: "Edit",
+    btnText: "Save",
+    opener: "Edit",
+    notebookId,
+    notebookName,
+    openerClass: "edit-btn",
+    action: editNotebook
+  };
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -25,11 +45,6 @@ function SimpleMenu({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  function redirectHandler() {
-    handleClose();
-    history.push(`${path}/edit`);
-  }
 
   function deleteHandler(id) {
     const updatedData = {
@@ -56,7 +71,9 @@ function SimpleMenu({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={redirectHandler}>Edit</MenuItem>
+        <MenuItem onClick={handleClose} className={classes.menuItem}>
+          <NotebookModal modalProps={modalProps} />
+        </MenuItem>
         <MenuItem onClick={() => deleteHandler(notebookId)}>Delete</MenuItem>
       </Menu>
     </div>
@@ -74,5 +91,5 @@ const mapStateToProps = state => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, { deleteNotebook })(SimpleMenu)
+  connect(mapStateToProps, { deleteNotebook, editNotebook })(SimpleMenu)
 );

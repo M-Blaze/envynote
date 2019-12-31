@@ -60,6 +60,22 @@ export const addNotebook = name => {
   });
 };
 
+export const editNotebook = data => {
+  const notebooks = getNotebooks();
+  const targetIndex = notebooks.findIndex(notebook => notebook.id === data.id);
+  if (data.name.trim() !== "") {
+    notebooks[targetIndex].name = data.name;
+    setNotebooks(notebooks);
+  }
+  return new Promise((resolve, reject) => {
+    if (data.name.trim() === "") {
+      reject();
+    } else {
+      resolve(notebooks);
+    }
+  });
+};
+
 export const deleteNotebook = data => {
   const notebooks = getNotebooks();
   const newNotebooks = notebooks.filter(notebook => notebook.id !== data.id);

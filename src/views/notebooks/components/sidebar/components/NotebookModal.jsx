@@ -1,11 +1,9 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
-import AddIcon from "@material-ui/icons/Add";
 import Fade from "@material-ui/core/Fade";
 import { connect } from "react-redux";
-import { addNotebook } from "../../../../../store/action";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -21,18 +19,37 @@ const useStyles = makeStyles(theme => ({
     minWidth: "280px",
     maxWidth: "385px",
     width: "100%"
+  },
+  btn_edit: {
+    padding: theme.spacing(0.7, 2.1)
   }
 }));
 
-function TransitionsModal(props) {
+function NotebookModal({
+  modalProps: {
+    title,
+    btnText,
+    opener,
+    openerClass,
+    action,
+    notebookId,
+    notebookName
+  }
+}) {
+  const [inputVal, setInputVal] = useState("");
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const inputRef = useRef();
-
   function handleSubmit(e) {
     e.preventDefault();
-    props.addNotebook(inputRef.current.value);
     handleClose();
+    if (title === "Create") {
+      action(inputVal);
+    } else {
+      action({
+        id: notebookId,
+        name: inputVal
+      });
+    }
   }
 
   const handleOpen = () => {
@@ -43,10 +60,14 @@ function TransitionsModal(props) {
     setOpen(false);
   };
 
+  function changeHandler(e) {
+    setInputVal(e.target.value);
+  }
+
   return (
     <div>
-      <div onClick={handleOpen} className="icon-holder">
-        <AddIcon />
+      <div onClick={handleOpen} className={openerClass}>
+        {opener}
       </div>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -65,18 +86,20 @@ function TransitionsModal(props) {
             <div className="form-block">
               <form onSubmit={handleSubmit}>
                 <div className="form-title">
-                  <h2>Create Notebook</h2>
+                  <h2>{title} Notebook</h2>
                 </div>
                 <div className="input-group">
                   <input
-                    ref={inputRef}
                     type="text"
+                    onChange={changeHandler}
+                    defaultValue={notebookName ? notebookName : null}
                     placeholder="Enter Notebook Title"
+                    autoFocus
                   />
                 </div>
                 <div className="button-group">
                   <button className="btn btn-primary" type="submit">
-                    Add Notebook
+                    {btnText}
                   </button>
                 </div>
               </form>
@@ -94,4 +117,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { addNotebook })(TransitionsModal);
+export default connect(mapStateToProps)(NotebookModal);

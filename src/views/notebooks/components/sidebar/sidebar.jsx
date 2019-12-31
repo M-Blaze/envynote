@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchNotebooks, setActiveNotebook } from "../../../../store/action";
-import AddNotebook from "./components/createNotebook";
+import NotebookModal from "./components/NotebookModal";
 import NotebookMenu from "../../../../components/NotebookMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
+import AddIcon from "@material-ui/icons/Add";
+import { addNotebook } from "../../../../store/action";
 
 class Sidebar extends Component {
   componentDidMount() {
@@ -14,11 +16,18 @@ class Sidebar extends Component {
   }
 
   render() {
+    const modalProps = {
+      opener: <AddIcon />,
+      openerClass: "icon-holder",
+      btnText: "Create Notebook",
+      title: "Create",
+      action: this.props.addNotebook
+    };
     return (
       <div className="notebook-bar">
         <div className="block-title">
           <h3>Notebooks</h3>
-          <AddNotebook />
+          <NotebookModal modalProps={modalProps} />
         </div>
         <div className="list-wrapper">
           <ul className="notebooks-list">
@@ -43,10 +52,7 @@ class Sidebar extends Component {
                     </div>
                   </Link>
                   {notebook.id !== 1 ? (
-                    <NotebookMenu
-                      path={`/notebooks/${notebook.id}`}
-                      notebookId={notebook.id}
-                    />
+                    <NotebookMenu inputVal={notebook} />
                   ) : null}
                 </li>
               );
@@ -65,6 +71,8 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { fetchNotebooks, setActiveNotebook })(
-  Sidebar
-);
+export default connect(mapStateToProps, {
+  fetchNotebooks,
+  setActiveNotebook,
+  addNotebook
+})(Sidebar);

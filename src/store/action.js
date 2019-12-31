@@ -1,6 +1,7 @@
 import {
   addNote as addNoteApi,
   addNotebook as addNotebookApi,
+  editNotebook as editNotebookApi,
   deleteNotebook as deleteNotebookApi,
   fetchActiveNotebook,
   fetchNotebooks as fetchNotebooksApi,
@@ -44,6 +45,19 @@ export const addNotebook = notebookName => (dispatch, getState) => {
       payload: getState().notebooks.concat([notebook])
     });
   });
+};
+
+export const editNotebook = data => dispatch => {
+  editNotebookApi(data)
+    .then(notebooks => {
+      dispatch({
+        type: "SET_NOTEBOOKS",
+        payload: notebooks
+      });
+    })
+    .catch(() => {
+      return;
+    });
 };
 
 export const deleteNotebook = id => dispatch => {
