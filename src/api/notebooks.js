@@ -1,4 +1,9 @@
+import fire from "../services/FirebaseService";
+const db = fire.firestore();
+
 function getNotebooks() {
+  const notebooksFirebase = db.ref("notebooks").orderByKey();
+  console.log(notebooksFirebase);
   const notebooks = localStorage.getItem("notebooks");
   return [...JSON.parse(notebooks)];
 }
@@ -17,6 +22,8 @@ function setNotes(note) {
 }
 
 export const fetchNotebooks = () => {
+  console.log("fetch");
+
   return new Promise(resolve => {
     resolve(getNotebooks());
   });
