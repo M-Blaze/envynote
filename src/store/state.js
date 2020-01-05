@@ -1,4 +1,5 @@
 const state = {
+  defaultNotbookId: null,
   notebooks: [],
   activeNotebook: {},
   notes: [],

@@ -75,6 +75,17 @@ textarea {
   }
 }
 
+.spinner {
+  @include d-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
 .btn {
   padding: 8px 10px;
   border: none;
@@ -495,7 +506,7 @@ textarea {
 
     .icon-wrap {
       position: absolute;
-      top: calc(50% - 1px);
+      top: 50%;
       left: 8px;
       transform: translateY(-50%);
       @include size(20px);

@@ -7,7 +7,7 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { deleteNotebook, editNotebook } from "../store/action";
-import NotebookModal from "../views/notebooks/components/sidebar/components/NotebookModal";
+import NotebookModal from "../views/notebooks/components/Sidebar/components/NotebookModal";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme =>
@@ -24,7 +24,8 @@ function SimpleMenu({
   horizontal,
   activeNotebook,
   inputVal: { id: notebookId, name: notebookName },
-  editNotebook
+  editNotebook,
+  history
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const classes = useStyles();
@@ -47,12 +48,9 @@ function SimpleMenu({
   };
 
   function deleteHandler(id) {
-    const updatedData = {
-      id,
-      activeNotebookId: activeNotebook.id
-    };
     handleClose();
-    deleteNotebook(updatedData);
+    deleteNotebook(id);
+    history.replace(`/notebooks/${activeNotebook.id}`);
   }
 
   return (

@@ -8,14 +8,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { deleteNote } from "../store/action";
 
-function SimpleMenu({
-  history,
-  deleteNote,
-  noteData,
-  path,
-  horizontal,
-  activeNote
-}) {
+function SimpleMenu({ history, deleteNote, noteId, path, horizontal }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -30,10 +23,9 @@ function SimpleMenu({
     history.push(`${path}/edit`);
   }
 
-  function deleteHandler(data) {
-    const updatedData = { ...data, activeNoteId: activeNote.id };
+  function deleteHandler(id) {
     handleClose();
-    deleteNote(updatedData);
+    deleteNote(id);
   }
 
   return (
@@ -53,7 +45,7 @@ function SimpleMenu({
         onClose={handleClose}
       >
         <MenuItem onClick={() => redirectHandler()}>Edit</MenuItem>
-        <MenuItem onClick={() => deleteHandler(noteData)}>Delete</MenuItem>
+        <MenuItem onClick={() => deleteHandler(noteId)}>Delete</MenuItem>
       </Menu>
     </div>
   );

@@ -22,6 +22,12 @@ const reducer = (state, action) => {
         activeNote: payload
       };
 
+    case "SET_DEFAULT_NOTEBOOK_ID":
+      return {
+        ...state,
+        defaultNotebookId: payload
+      };
+
     default:
       return state;
   }

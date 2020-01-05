@@ -8,9 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 class Sidebar extends Component {
   componentDidMount() {
-    const id = parseInt(this.props.match.params.id);
-    this.props.setActiveNotebook(id);
-    this.props.fetchNotes(id);
+    const id = this.props.match.params.id;
+    if (this.props.activeNotebook.id !== id) {
+      this.props.setActiveNotebook(id);
+    }
   }
 
   redirectHandler = () => {

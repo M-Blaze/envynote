@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchNotebooks, setActiveNotebook } from "../../../../store/action";
+import { setActiveNotebook, addNotebook } from "../../../../store/action";
 import NotebookModal from "./components/NotebookModal";
 import NotebookMenu from "../../../../components/NotebookMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import AddIcon from "@material-ui/icons/Add";
-import { addNotebook } from "../../../../store/action";
 
 class Sidebar extends Component {
   componentDidMount() {
-    this.props.fetchNotebooks();
-    this.props.setActiveNotebook(parseInt(this.props.match.params.id));
+    this.props.setActiveNotebook(this.props.match.params.id);
   }
 
   render() {
@@ -31,29 +29,28 @@ class Sidebar extends Component {
         </div>
         <div className="list-wrapper">
           <ul className="notebooks-list">
-            {this.props.notebooks.map(notebook => {
+            {this.props.notebooks.map((notebook, index) => {
+              const { id, name } = notebook;
               return (
                 <li
-                  key={notebook.id}
+                  key={id}
                   className={`notebook-item ${
-                    notebook.id === this.props.activeNotebook.id ? "active" : ""
+                    id === this.props.activeNotebook.id ? "active" : ""
                   }`}
                 >
                   <Link
-                    onClick={() => this.props.setActiveNotebook(notebook.id)}
-                    to={`/notebooks/${notebook.id}`}
+                    onClick={() => this.props.setActiveNotebook(id)}
+                    to={`/notebooks/${id}`}
                     className="note-opener"
                   >
                     <div className="notebook">
                       <div className="icon-wrap">
                         <FontAwesomeIcon icon={faBook} />
                       </div>
-                      <div className="notebook-title">{notebook.name}</div>
+                      <div className="notebook-title">{name}</div>
                     </div>
                   </Link>
-                  {notebook.id !== 1 ? (
-                    <NotebookMenu inputVal={notebook} />
-                  ) : null}
+                  {index !== 0 ? <NotebookMenu inputVal={notebook} /> : null}
                 </li>
               );
             })}
@@ -72,7 +69,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  fetchNotebooks,
   setActiveNotebook,
   addNotebook
 })(Sidebar);

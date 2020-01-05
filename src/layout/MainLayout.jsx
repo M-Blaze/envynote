@@ -1,7 +1,24 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { fetchNotebooks, setDefaultNotebookId } from "../store/action";
+import { connect } from "react-redux";
+import Spinner from "../components/Spinner";
 
 class MainLayout extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isFetchingNotebooks: true
+    };
+  }
+
+  componentDidMount() {
+    this.props.fetchNotebooks().then(id => {
+      this.props.setDefaultNotebookId(id);
+      this.setState({ isFetchingNotebooks: false });
+    });
+  }
+
   render() {
     return (
       <div id="wrapper">
@@ -14,11 +31,13 @@ class MainLayout extends Component {
             </div>
             <div className="profile-button">M</div>
           </div>
-          {this.props.children}
+          {this.state.isFetchingNotebooks ? <Spinner /> : this.props.children}
         </div>
       </div>
     );
   }
 }
 
-export default MainLayout;
+export default connect(null, { fetchNotebooks, setDefaultNotebookId })(
+  MainLayout
+);

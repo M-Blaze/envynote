@@ -12,17 +12,21 @@ function NewNote(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const title = titleRef.current.value;
-    const content = contentRef.current.value;
+    const title = titleRef.current;
+    const titleValue = title.value;
+    const content = contentRef.current;
+    const contentValue = content.value;
     const notebookId = props.activeNotebook.id;
-    if (
-      title.startsWith(" ") ||
-      title.length === 0 ||
-      content.startsWith(" " || content.length === 0)
-    ) {
+    if (titleValue.trim() === "" || contentValue.trim() === "") {
       return;
     }
-    props.addNote({ title, content, notebookId });
+    props
+      .addNote({ title: titleValue, content: contentValue, notebookId })
+      .then(() => {
+        title.value = "";
+        title.focus();
+        content.value = "";
+      });
   }
 
   return (

@@ -3,10 +3,27 @@ import Sidebar from "./components/Sidebar";
 import { Route, Switch } from "react-router-dom";
 import NoteContent from "./components/NoteContent";
 import NewNote from "./components/NewNote";
+import { fetchNotes } from "../../store/action";
+import { connect } from "react-redux";
 
 class Notes extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isFetching: true
+    };
+  }
+
+  componentDidMount() {
+    this.props.fetchNotes(this.props.match.params.id).then(() => {
+      this.setState({
+        isFetching: false
+      });
+    });
+  }
+
   render() {
-    return (
+    return this.state.isFetching ? null : (
       <React.Fragment>
         <Sidebar />
         <Switch>
@@ -21,4 +38,4 @@ class Notes extends Component {
   }
 }
 
-export default Notes;
+export default connect(null, { fetchNotes })(Notes);

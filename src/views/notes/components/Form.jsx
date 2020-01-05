@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { editNote } from "../../../store/action";
+import { editNote, setActiveNote } from "../../../store/action";
 import TextareaAutosize from "react-textarea-autosize";
 
 class Form extends Component {
@@ -14,6 +14,7 @@ class Form extends Component {
   }
 
   componentDidMount() {
+    this.titleRef.focus();
     if (Object.keys(this.props.activeNote).length !== 0) {
       const {
         activeNote: { title, content }
@@ -23,10 +24,10 @@ class Form extends Component {
         content
       });
     }
-    this.titleRef.focus();
   }
 
   componentDidUpdate(prevProps) {
+    this.titleRef.focus();
     if (this.props.activeNote.id !== prevProps.activeNote.id) {
       const {
         activeNote: { title, content }
@@ -40,12 +41,15 @@ class Form extends Component {
 
   submitHandler = e => {
     e.preventDefault();
+    const { title, content } = this.state;
     const newNote = {
       id: this.props.activeNote.id,
       notebookId: this.props.activeNote.notebookId,
-      ...this.state
+      title,
+      content
     };
     this.props.editNote(newNote);
+    this.props.setActiveNote(this.props.activeNote.id);
     this.props.history.push(this.props.path);
   };
 
@@ -99,4 +103,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { editNote })(Form);
+export default connect(mapStateToProps, { editNote, setActiveNote })(Form);

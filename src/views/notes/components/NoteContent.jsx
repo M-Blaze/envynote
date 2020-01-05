@@ -4,19 +4,15 @@ import { connect } from "react-redux";
 import { setActiveNote } from "../../../store/action";
 import Form from "./Form";
 class NoteContent extends Component {
-  state = {
-    slug: 1
-  };
-
   componentDidMount() {
-    this.props.setActiveNote(parseInt(this.props.match.params.slug));
+    this.props.setActiveNote(this.props.match.params.slug);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const slug = this.props.match.params.slug;
-    if (slug !== this.state.slug) {
-      this.setState({ slug });
-      this.props.setActiveNote(parseInt(slug));
+    if (prevProps.match.params.slug !== slug) {
+      // console.log(slug);
+      this.props.setActiveNote(slug);
     }
   }
 

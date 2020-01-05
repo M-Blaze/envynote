@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AddIcon from "@material-ui/icons/Add";
-import { fetchNotes, setActiveNotebook } from "../../../store/action";
+import { fetchNotes } from "../../../store/action";
 import { connect } from "react-redux";
 import NoteMenu from "../../../components/NoteMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,7 +47,7 @@ class Notes extends Component {
                   </h4>
                   <NoteMenu
                     horizontal="true"
-                    noteData={note}
+                    noteId={note.id}
                     path={`/notebook/${this.props.activeNotebook.id}/notes/${note.id}`}
                   />
                 </div>
@@ -70,6 +70,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { fetchNotes, setActiveNotebook })(
-  Notes
-);
+export default connect(mapStateToProps, { fetchNotes })(Notes);

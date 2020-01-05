@@ -26,7 +26,7 @@ function MenuItem(props) {
                 </div>
               </div>
             </Link>
-            <NoteMenu path={`${props.match.url}/${note.id}`} noteData={note} />
+            <NoteMenu path={`${props.match.url}/${note.id}`} noteId={note.id} />
           </li>
         );
       })}
