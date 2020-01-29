@@ -1,9 +1,11 @@
 const state = {
-  defaultNotbookId: null,
+  defaultNotbookId: "general",
   notebooks: [],
   activeNotebook: {},
   notes: [],
-  activeNote: {}
+  activeNote: {},
+  user: "",
+  username: ""
 };
 
 export default state;

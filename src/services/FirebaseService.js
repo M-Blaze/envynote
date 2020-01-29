@@ -1,5 +1,4 @@
 import firebase from "firebase/app";
-
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -15,12 +14,24 @@ const app = firebase.initializeApp({
 });
 
 export const db = app.firestore();
+export const auth = app.auth();
+export const provider = new firebase.auth.GoogleAuthProvider();
 
-export function getCollection(name, where = []) {
+function getTimeStamp() {
+  return firebase.firestore.FieldValue.serverTimestamp();
+}
+
+export function getCollection(name, where = [], sort = false, sortBy) {
   let collectionRef = db.collection(name);
   if (where.length) {
     const [fieldPath, optStr, value] = where;
-    collectionRef = collectionRef.where(fieldPath, optStr, value);
+    if (sort) {
+      collectionRef = collectionRef
+        .where(fieldPath, optStr, value)
+        .orderBy(sortBy);
+    } else {
+      collectionRef = collectionRef.where(fieldPath, optStr, value);
+    }
   }
   return collectionRef.get().then(querySnapshot => {
     const results = [];
@@ -29,41 +40,67 @@ export function getCollection(name, where = []) {
         ...doc.data(),
         id: doc.id
       };
+
       results.push(result);
     });
     return results;
   });
 }
 
+export function getDocuments(collectionName, where, notebookId) {
+  if (where.length !== 0) {
+    const [fieldPath, optStr, value] = where;
+    const collectionRef = db
+      .collection(collectionName)
+      .where(fieldPath, optStr, value)
+      .orderBy("createdAt");
+    return collectionRef.get().then(querySnapshot => {
+      let results = [];
+      querySnapshot.forEach(doc => {
+        if (doc.data().notebookId === notebookId) {
+          results.push({ ...doc.data(), id: doc.id });
+        }
+      });
+      return results;
+    });
+  }
+}
+
 export function addDocument(collectionName, docData) {
+  const timeStamp = getTimeStamp();
   return db
     .collection(collectionName)
-    .add(docData)
+    .add({ ...docData, createdAt: timeStamp })
     .then(doc => {
       return {
         ...docData,
-        id: doc.id
+        id: doc.id,
+        createdAt: timeStamp
       };
     });
 }
 
 export function updateDocument(collectionName, docId, docData) {
+  const timeStamp = getTimeStamp();
   return db
     .collection(collectionName)
     .doc(docId)
-    .update({ ...docData });
+    .update({ ...docData, editedAt: timeStamp });
 }
 
-export function deleteDocument(collectionName, docId, multiple) {
-  if (multiple) {
+export function deleteDocument(collectionName, docId, where = []) {
+  if (where.length !== 0) {
+    const [fieldPath, optStr, value] = where;
     return db
       .collection(collectionName)
-      .where("notebookId", "==", docId)
+      .where(fieldPath, optStr, value)
       .get()
       .then(querySnapshot => {
         const batch = db.batch();
         querySnapshot.forEach(doc => {
-          batch.delete(doc.ref);
+          if (doc.data().notebookId === docId) {
+            batch.delete(doc.ref);
+          }
         });
         batch.commit();
       });
@@ -72,19 +109,6 @@ export function deleteDocument(collectionName, docId, multiple) {
     .collection(collectionName)
     .doc(docId)
     .delete();
-}
-
-export function getDocuments(collectionName, notebookId) {
-  const collectionRef = db.collection(collectionName);
-  return collectionRef.get().then(querySnapshot => {
-    let results = [];
-    querySnapshot.forEach(doc => {
-      if (doc.data().notebookId === notebookId) {
-        results.push({ ...doc.data(), id: doc.id });
-      }
-    });
-    return results;
-  });
 }
 
 export function getDocument(collectionName, id) {

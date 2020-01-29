@@ -3,19 +3,26 @@ import {
   addDocument,
   updateDocument,
   deleteDocument,
-  getDocuments
+  getDocuments,
+  auth,
+  provider
 } from "../services/FirebaseService";
 
-export function fetchNotebooks() {
-  return getCollection("Notebooks");
+export function fetchDefaultNotebook() {
+  return getCollection("Notebooks", ["state", "==", "public"], false);
 }
 
-export function fetchNotes(id) {
-  return getDocuments("Notes", id);
+export function fetchNotebooks(userId) {
+  const sortBy = "createdAt";
+  return getCollection("Notebooks", ["userId", "==", userId], true, sortBy);
 }
 
-export function addNotebook(name) {
-  return addDocument("Notebooks", { name });
+export function fetchNotes(userId, id) {
+  return getDocuments("Notes", ["userId", "==", userId], id);
+}
+
+export function addNotebook(notebook) {
+  return addDocument("Notebooks", notebook);
 }
 
 export function editNotebook(data) {
@@ -23,10 +30,9 @@ export function editNotebook(data) {
   return updateDocument("Notebooks", id, { name });
 }
 
-export function deleteNotebook(id) {
-  const multiple = true;
-  deleteDocument("Notes", id, multiple);
-  return deleteDocument("Notebooks", id);
+export function deleteNotebook(userId, notebookId) {
+  deleteDocument("Notes", notebookId, ["userId", "==", userId]);
+  return deleteDocument("Notebooks", notebookId);
 }
 
 export function addNote(note) {
@@ -39,4 +45,24 @@ export function deleteNote(id) {
 
 export function editNote(data) {
   return updateDocument("Notes", data.id, data);
+}
+
+export function signInApi(email, password) {
+  return auth.signInWithEmailAndPassword(email, password);
+}
+
+export function signUpApi(email, password) {
+  return auth.createUserWithEmailAndPassword(email, password);
+}
+
+export function getUsernameApi(userId) {
+  return getCollection("User", ["userId", "==", userId]);
+}
+
+export function addUserApi(user) {
+  return addDocument("User", user);
+}
+
+export function googleLoginApi() {
+  return auth.signInWithPopup(provider);
 }

@@ -14,7 +14,11 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    this.titleRef.focus();
+    if (this.props.focusElement === "content") {
+      this.contentRef.focus();
+    } else {
+      this.titleRef.focus();
+    }
     if (Object.keys(this.props.activeNote).length !== 0) {
       const {
         activeNote: { title, content }
@@ -27,8 +31,8 @@ class Form extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.titleRef.focus();
     if (this.props.activeNote.id !== prevProps.activeNote.id) {
+      this.titleRef.focus();
       const {
         activeNote: { title, content }
       } = this.props;
@@ -50,8 +54,12 @@ class Form extends Component {
     };
     this.props.editNote(newNote);
     this.props.setActiveNote(this.props.activeNote.id);
-    this.props.history.push(this.props.path);
+    this.redirectFromEdit();
   };
+
+  redirectFromEdit() {
+    this.props.history.push(this.props.path);
+  }
 
   changeHandler = e => {
     const target = e.target;
@@ -67,12 +75,20 @@ class Form extends Component {
 
   render() {
     return (
-      <form action="#" onSubmit={this.submitHandler} className="edit-form">
+      <form
+        action="#"
+        autoComplete="off"
+        onSubmit={this.submitHandler}
+        className="edit-form"
+      >
         <div className="input-group note-title">
           <TextareaAutosize
             type="text"
             name="title"
-            inputRef={title => (this.titleRef = title)}
+            spellCheck="false"
+            inputRef={input => {
+              this.titleRef = input;
+            }}
             onChange={this.changeHandler}
             value={this.state.title}
           />
@@ -81,17 +97,22 @@ class Form extends Component {
           <TextareaAutosize
             type="text"
             name="content"
+            spellCheck="false"
+            inputRef={input => {
+              this.contentRef = input;
+            }}
             onChange={this.changeHandler}
             value={this.state.content}
           />
         </div>
-        {this.state.save && (
-          <div className="button-group">
+        <div className="button-group">
+          <button className="btn">Cancel</button>
+          {this.state.save && (
             <button className="btn" type="submit">
               Save
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </form>
     );
   }

@@ -1,0 +1,14 @@
+@mixin size($x, $y: false) {
+  @if $y {
+    height: $x;
+    width: $y;
+  } @else {
+    height: $x;
+    width: $x;
+  }
+}
+
+//responsive mixin handler
+// @mixin media {
+
+// }

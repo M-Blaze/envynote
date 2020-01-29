@@ -7,6 +7,10 @@ import { fetchNotes, setActiveNotebook } from "../../../store/action";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 class Sidebar extends Component {
+  state = {
+    isSidebarOpen: false
+  };
+
   componentDidMount() {
     const id = this.props.match.params.id;
     if (this.props.activeNotebook.id !== id) {
@@ -14,15 +18,62 @@ class Sidebar extends Component {
     }
   }
 
+  setIsSidebarOpen = value => {
+    this.setState({
+      isSidebarOpen: value
+    });
+  };
+
+  openSidebar = () => {
+    this.setIsSidebarOpen(true);
+    document.body.addEventListener("click", this.closeSidebarConditionally);
+  };
+
+  closeSidebar = () => {
+    this.setIsSidebarOpen(false);
+    document.body.removeEventListener("click", this.closeSidebarConditionally);
+  };
+
+  closeSidebarConditionally = e => {
+    const sidebarId = "note-sidebar";
+    const itemMenuClass = "note-menu";
+    const target = e.target;
+    const sidebarContainer = document.getElementById(sidebarId);
+    if (
+      sidebarContainer.contains(target) ||
+      target.parentElement.classList.contains(itemMenuClass)
+    ) {
+      return;
+    }
+    this.closeSidebar();
+  };
+
+  toggleSidebar = () => {
+    if (!this.state.isSidebarOpen) {
+      this.openSidebar();
+      return;
+    }
+    this.closeSidebar();
+  };
+
   redirectHandler = () => {
     this.props.history.push(
       `/notebook/${this.props.activeNotebook.id}/notes/new`
     );
+    this.closeSidebar();
   };
 
   render() {
     return (
-      <div className="note-bar">
+      <div
+        id="note-sidebar"
+        className={`note-bar ${
+          this.state.isSidebarOpen ? "toggle-active" : ""
+        }`}
+      >
+        <div onClick={this.toggleSidebar} className="toggle-bar">
+          <i className="icon-log-in"></i>
+        </div>
         <div className="block-title">
           <div className="icon-wrap">
             <Link to="/">
@@ -34,7 +85,10 @@ class Sidebar extends Component {
             <AddIcon />
           </div>
         </div>
-        <MenuItem />
+        <MenuItem
+          openSidebar={this.openSidebar}
+          closeSidebar={this.closeSidebar}
+        />
       </div>
     );
   }

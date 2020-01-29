@@ -4,27 +4,37 @@ import {
   editNotebook as editNotebookApi,
   deleteNotebook as deleteNotebookApi,
   fetchNotebooks as fetchNotebooksApi,
+  fetchDefaultNotebook,
   fetchNotes as fetchNotesApi,
   deleteNote as deleteNoteApi,
-  editNote as editNoteApi
+  editNote as editNoteApi,
+  getUsernameApi,
+  signInApi,
+  signUpApi,
+  googleLoginApi,
+  addUserApi
 } from "../api/notebooks";
-
+import { auth } from "../services/FirebaseService";
 import { findIndex } from "lodash";
 
-export const fetchNotebooks = () => dispatch => {
-  return fetchNotebooksApi().then(notebooks => {
-    dispatch({
-      type: "SET_NOTEBOOKS",
-      payload: notebooks
-    });
-    return notebooks[0].id;
+export const fetchNotebooks = userId => dispatch => {
+  let defaultNotebook = [];
+  fetchDefaultNotebook().then(notebook => {
+    defaultNotebook = defaultNotebook.concat(notebook);
   });
-};
 
-export const setDefaultNotebookId = id => dispatch => {
-  dispatch({
-    type: "SET_DEFAULT_NOTEBOOK_ID",
-    payload: id
+  return fetchNotebooksApi(userId).then(notebooks => {
+    if (notebooks.length !== 0) {
+      dispatch({
+        type: "SET_NOTEBOOKS",
+        payload: defaultNotebook.concat(notebooks)
+      });
+    } else {
+      dispatch({
+        type: "SET_NOTEBOOKS",
+        payload: defaultNotebook
+      });
+    }
   });
 };
 
@@ -32,14 +42,15 @@ export const setActiveNotebook = notebookId => (dispatch, getState) => {
   const activeNotebook = getState().notebooks.find(
     notebook => notebook.id === notebookId
   );
+
   dispatch({
     type: "SET_ACTIVE_NOTEBOOK",
     payload: activeNotebook
   });
 };
 
-export const addNotebook = notebookName => (dispatch, getState) => {
-  addNotebookApi(notebookName).then(notebook => {
+export const addNotebook = notebook => (dispatch, getState) => {
+  addNotebookApi(notebook).then(notebook => {
     dispatch({
       type: "SET_NOTEBOOKS",
       payload: getState().notebooks.concat([notebook])
@@ -64,15 +75,20 @@ export const editNotebook = data => (dispatch, getState) => {
   });
 };
 
-export const deleteNotebook = id => (dispatch, getState) => {
-  deleteNotebookApi(id);
+export const deleteNotebook = (userId, notebookId) => (dispatch, getState) => {
+  deleteNotebookApi(userId, notebookId);
   const notebooks = getState().notebooks;
   const activeNoteId = getState().activeNotebook.id;
-  const targetIndex = findIndex(notebooks, notebook => notebook.id === id);
-  const newNotebooks = getState().notebooks.filter(
-    notebook => notebook.id !== id
+  const targetIndex = findIndex(
+    notebooks,
+    notebook => notebook.id === notebookId
   );
-  const newNotes = getState().notes.filter(note => note.notebookId !== id);
+  const newNotebooks = getState().notebooks.filter(
+    notebook => notebook.id !== notebookId
+  );
+  const newNotes = getState().notes.filter(
+    note => note.notebookId !== notebookId
+  );
   dispatch({
     type: "SET_NOTEBOOKS",
     payload: newNotebooks
@@ -81,7 +97,7 @@ export const deleteNotebook = id => (dispatch, getState) => {
     type: "SET_NOTES",
     payload: newNotes
   });
-  if (activeNoteId === id) {
+  if (activeNoteId === notebookId) {
     dispatch({
       type: "SET_ACTIVE_NOTEBOOK",
       payload: notebooks[targetIndex - 1]
@@ -89,8 +105,8 @@ export const deleteNotebook = id => (dispatch, getState) => {
   }
 };
 
-export const fetchNotes = notebookId => dispatch => {
-  return fetchNotesApi(notebookId).then(notes => {
+export const fetchNotes = (userId, notebookId) => dispatch => {
+  return fetchNotesApi(userId, notebookId).then(notes => {
     dispatch({
       type: "SET_NOTES",
       payload: notes
@@ -100,6 +116,8 @@ export const fetchNotes = notebookId => dispatch => {
 
 export const addNote = note => (dispatch, getState) => {
   return addNoteApi(note).then(newNote => {
+    console.log(newNote.createdAt);
+
     dispatch({
       type: "SET_NOTES",
       payload: getState().notes.concat([newNote])
@@ -117,6 +135,7 @@ export const setActiveNote = id => (dispatch, getState) => {
 
 export const editNote = data => (dispatch, getState) => {
   const notes = getState().notes;
+  const newDate = new Date();
   editNoteApi(data);
   dispatch({
     type: "SET_NOTES",
@@ -124,7 +143,9 @@ export const editNote = data => (dispatch, getState) => {
       if (note.id === data.id) {
         return {
           ...note,
-          ...data
+          ...data,
+          editedAt: newDate,
+          editedIn: true
         };
       }
       return note;
@@ -154,5 +175,71 @@ export const deleteNote = id => (dispatch, getState) => {
   dispatch({
     type: "SET_NOTES",
     payload: newNotes
+  });
+};
+
+export const authStateChange = () => dispatch => {
+  auth.onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+      const uId = firebaseUser.uid;
+      dispatch({
+        type: "SET_USER",
+        payload: uId
+      });
+    } else {
+      dispatch({
+        type: "SET_USER",
+        payload: "loggedOut"
+      });
+    }
+  });
+};
+
+export const signIn = (email, password) => () => {
+  return signInApi(email, password);
+};
+
+export const signUp = (username, email, password) => dispatch => {
+  return signUpApi(email, password).then(doc => {
+    const { uid } = doc.user;
+    addUserApi({ userId: uid, username });
+    dispatch({
+      type: "SET_USER",
+      payload: username
+    });
+  });
+};
+
+export const signOut = () => () => {
+  auth.signOut();
+};
+
+export const getUsername = userId => dispatch => {
+  return getUsernameApi(userId).then(doc => {
+    dispatch({
+      type: "SET_USERNAME",
+      payload: doc[0].username
+    });
+  });
+};
+
+export const googleLogin = () => dispatch => {
+  return googleLoginApi().then(userDoc => {
+    const { uid, displayName } = userDoc.user;
+    getUsernameApi(uid).then(doc => {
+      if (doc.length !== 0) {
+        dispatch({
+          type: "SET_USERNAME",
+          payload: doc[0].username
+        });
+      } else {
+        addUserApi({ userId: uid, username: displayName }).then(() => {
+          dispatch({
+            type: "SET_USERNAME",
+            payload: displayName
+          });
+        });
+      }
+    });
   });
 };

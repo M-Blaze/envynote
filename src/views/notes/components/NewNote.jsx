@@ -17,11 +17,12 @@ function NewNote(props) {
     const content = contentRef.current;
     const contentValue = content.value;
     const notebookId = props.activeNotebook.id;
+    const userId = props.userId;
     if (titleValue.trim() === "" || contentValue.trim() === "") {
       return;
     }
     props
-      .addNote({ title: titleValue, content: contentValue, notebookId })
+      .addNote({ title: titleValue, content: contentValue, notebookId, userId })
       .then(() => {
         title.value = "";
         title.focus();
@@ -31,13 +32,14 @@ function NewNote(props) {
 
   return (
     <div className="newNote-block">
-      <form onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="input-group title-block">
           <input
             ref={titleRef}
             name="title"
             type="text"
             placeholder="Title Here..."
+            spellCheck="false"
           />
         </div>
         <div className="input-group text-block">
@@ -46,6 +48,7 @@ function NewNote(props) {
             type="text"
             name="content"
             placeholder="Content Here..."
+            spellCheck="false"
           />
         </div>
         <div className="button-group">
@@ -60,7 +63,8 @@ function NewNote(props) {
 
 const mapStateToProps = state => {
   return {
-    activeNotebook: state.activeNotebook
+    activeNotebook: state.activeNotebook,
+    userId: state.user
   };
 };
 

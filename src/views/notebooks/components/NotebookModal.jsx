@@ -18,7 +18,8 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "4px",
     minWidth: "280px",
     maxWidth: "385px",
-    width: "100%"
+    width: "100%",
+    margin: theme.spacing(0, 2.5)
   },
   btn_edit: {
     padding: theme.spacing(0.7, 2.1)
@@ -34,21 +35,27 @@ function NotebookModal({
     action,
     notebookId,
     notebookName
-  }
+  },
+  userId,
+  classProp
 }) {
   const [inputVal, setInputVal] = useState("");
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const titleRegEx = /\w/gi;
+
   function handleSubmit(e) {
     e.preventDefault();
     handleClose();
-    if (title === "Create") {
-      action(inputVal);
-    } else {
-      action({
-        id: notebookId,
-        name: inputVal
-      });
+    if (titleRegEx.test(inputVal.trim())) {
+      if (title === "Create") {
+        action({ name: inputVal, userId });
+      } else {
+        action({
+          id: notebookId,
+          name: inputVal
+        });
+      }
     }
   }
 
@@ -65,10 +72,10 @@ function NotebookModal({
   }
 
   return (
-    <div>
-      <div onClick={handleOpen} className={openerClass}>
+    <React.Fragment>
+      <span onClick={handleOpen} className={`${classProp} ${openerClass}`}>
         {opener}
-      </div>
+      </span>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -82,9 +89,9 @@ function NotebookModal({
         }}
       >
         <Fade in={open}>
-          <div className={`${classes.paper} paperFocus`}>
+          <div className={`notebook-edit-form ${classes.paper} paperFocus`}>
             <div className="form-block">
-              <form onSubmit={handleSubmit}>
+              <form autoComplete="off" onSubmit={handleSubmit}>
                 <div className="form-title">
                   <h2>{title} Notebook</h2>
                 </div>
@@ -95,6 +102,7 @@ function NotebookModal({
                     defaultValue={notebookName ? notebookName : null}
                     placeholder="Enter Notebook Title"
                     autoFocus
+                    spellCheck="false"
                   />
                 </div>
                 <div className="button-group">
@@ -107,13 +115,14 @@ function NotebookModal({
           </div>
         </Fade>
       </Modal>
-    </div>
+    </React.Fragment>
   );
 }
 
 const mapStateToProps = state => {
   return {
-    notebooks: state.notebooks
+    notebooks: state.notebooks,
+    userId: state.user
   };
 };
 

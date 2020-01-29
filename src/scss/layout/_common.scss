@@ -1,0 +1,1370 @@
+.btn {
+  padding: 8px 10px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.2s ease-in-out, background 0.2s ease-in-out;
+  border-radius: 2px;
+
+  &:hover {
+    background: #9852f9;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+.spinner {
+  @extend %d-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.notebook-menu,
+.note-menu {
+  ul.MuiList-padding {
+    padding: 0 !important;
+  }
+}
+
+.notebook-sidebar {
+  padding: 10px 0 0;
+  width: 250px;
+  background: #fff;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 20;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+
+  @include media(">=tablet") {
+    padding: 20px 0;
+    position: relative;
+    transform: translate(0);
+  }
+
+  @include media(">=desktop") {
+    width: 280px;
+  }
+
+  &.toggle-active {
+    transform: translateX(0);
+
+    .toggle-bar {
+      i {
+        pointer-events: none;
+        transform: rotateY(180deg);
+      }
+    }
+  }
+
+  .toggle-bar {
+    content: "\e902";
+    font-family: "icomoon";
+    color: white;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    width: 20px;
+    background: #000;
+    border-radius: 0 5px 5px 0;
+    @extend %d-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: color 0.2s linear;
+
+    i {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    @include media(">=tablet") {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+      color: #81ecec;
+    }
+  }
+
+  h3 {
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include media(">=desktop") {
+      font-size: 2.2rem;
+    }
+  }
+
+  .block-title {
+    @extend %d-flex;
+    align-items: center;
+    text-align: center;
+    font-size: 25px;
+    line-height: 1;
+    justify-content: space-between;
+    padding: 0 50px 0 10px;
+    margin-bottom: 10px;
+    position: relative;
+
+    @include media(">=tablet") {
+      margin-bottom: 20px;
+      padding: 0 50px 0 15px;
+    }
+
+    .icon-holder {
+      @include size(26px);
+      @extend %circle;
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      color: #000000;
+      transition: background 0.2s linear;
+      @include media(">=widescreen") {
+        @include size(30px);
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: #e0e0e0;
+      }
+
+      svg {
+        font-size: 1.2rem;
+        line-height: 1;
+        position: absolute;
+        z-index: 5;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        @include media(">=desktop") {
+          font-size: 1.8rem;
+        }
+      }
+    }
+  }
+}
+
+.notebooks-list {
+  @extend %list-reset;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+
+  .note-opener {
+    padding: 8px 15px;
+    transition: background 0.2s linear, color 0.2s linear;
+    margin-bottom: 1px;
+    text-decoration: none;
+    color: #000000;
+    display: block;
+    position: relative;
+
+    @include media(">=tablet") {
+      padding: 10px 20px;
+    }
+
+    &.active {
+      background: #f8f8f8;
+    }
+
+    &:hover {
+      background: #f2f2f2;
+      cursor: pointer;
+      position: relative;
+      z-index: 5;
+    }
+  }
+}
+
+.notebook-item {
+  position: relative;
+  transition: background 0.2s linear;
+  line-height: 1.2;
+
+  &:hover,
+  &.active {
+    background: #e0e0e0;
+  }
+
+  .menu-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 5px;
+    z-index: 10;
+    @include size(20px);
+    @extend %circle;
+    transform: translateY(-50%);
+    color: #000000;
+
+    @include media(">=tablet") {
+      @include size(26px);
+    }
+
+    button {
+      @include size(20px);
+      min-width: auto;
+      padding: 0 !important;
+      position: absolute;
+      z-index: 5;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      @include media(">=tablet") {
+        @include size(26px);
+      }
+    }
+
+    svg {
+      font-size: 1.3rem;
+      line-height: 1;
+
+      @include media(">=desktop") {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+.list-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.options-block {
+  @extend %list-reset;
+  position: absolute;
+  transform: translateX(-50%);
+  background: #e0e0e0;
+  z-index: 10;
+  width: 100px;
+  border-radius: 5px;
+  line-height: 1;
+  padding: 5px 0;
+  transition: opacity 0.2s linear, visibility 0.2s linear;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  li {
+    position: static;
+    padding: 5px 10px;
+  }
+}
+
+.notebook {
+  @extend %d-flex;
+  align-items: center;
+  padding-right: 10px;
+
+  @include media(">=desktop") {
+    padding-right: 23px;
+  }
+
+  .icon-wrap {
+    @extend %d-flex;
+    align-items: center;
+
+    svg {
+      font-size: 15px;
+      line-height: 1;
+    }
+  }
+
+  &-title {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 7px;
+    flex: 1;
+    @extend %ellipsis;
+  }
+}
+
+.notebook-content {
+  padding: 18px 8px 20px 30px;
+  overflow: auto;
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+
+  @include media(">=tablet") {
+    flex-direction: column;
+    padding: 20px 25px 20px;
+    height: 100%;
+    flex: 1;
+  }
+
+  @include media(">=desktop") {
+    padding: 35px 35px 20px;
+  }
+
+  .block-title {
+    @extend %d-flex;
+    position: relative;
+    margin-bottom: 20px;
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    padding-right: 40px;
+
+    @include media(">=tablet") {
+      height: auto;
+    }
+
+    @include media(">=desktop") {
+      margin-bottom: 45px;
+    }
+
+    .icon-wrapper {
+      @extend %d-flex;
+      align-items: center;
+
+      svg {
+        font-size: 1.7rem;
+        line-height: 1;
+
+        @include media(">=desktop") {
+          font-size: 2rem;
+        }
+      }
+    }
+
+    .icon-holder {
+      @include size(25px);
+      @extend %circle;
+      @extend %d-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      right: 5px;
+      transform: translateY(-50%);
+      color: #000000;
+      transition: background 0.2s linear;
+
+      @include media(">=tablet") {
+        @include size(30px);
+        right: 0;
+      }
+
+      @include media(">=desktop") {
+        @include size(40px);
+      }
+
+      svg {
+        font-size: 1.7rem;
+        line-height: 1;
+
+        @include media(">=desktop") {
+          font-size: 2rem;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        background: #e0e0e0;
+      }
+    }
+  }
+
+  .menu-button {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    color: #000000;
+
+    button {
+      @extend %circle;
+      @include size(26px);
+      min-width: auto;
+      padding: 0 !important;
+      z-index: 5;
+      transition: background 0.2s linear;
+    }
+
+    svg {
+      font-size: 1.1rem;
+      line-height: 1;
+
+      @include media(">=tablet") {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .title-text {
+    margin: 0 0 0 8px;
+    font-size: 1.5rem;
+    flex: 1;
+
+    @include media(">=desktop") {
+      font-size: 2rem;
+    }
+  }
+}
+
+.card {
+  background: rgb(242, 242, 242);
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 15px;
+
+  @include media(">=tablet") {
+    padding: 15px;
+  }
+
+  @include media(">=desktop") {
+    padding: 23px;
+    margin-bottom: 25px;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+
+    @include media(">=desktop") {
+      font-size: 2rem;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &-block {
+    height: calc(100% - 20px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 5px;
+    width: 100%;
+
+    @include media(">=tablet") {
+      height: auto;
+      flex: 1;
+      // padding-right: 0;
+      // flex: auto;
+      // overflow: visible;
+    }
+  }
+
+  &-title {
+    position: relative;
+    padding-right: 30px;
+    line-height: 1.2;
+  }
+
+  &-content {
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: #2d3748;
+
+    @include media(">=desktop") {
+      font-size: 1.5rem;
+    }
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.form-block {
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 10px 0;
+
+  @include media(">=tablet") {
+    font-size: 1.4rem;
+  }
+
+  .form-title {
+    margin-bottom: 15px;
+    @include media(">=tablet") {
+      margin-bottom: 25px;
+    }
+
+    @include media(">=desktop") {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+
+      @include media(">=tablet") {
+        font-size: 1.9rem;
+      }
+    }
+  }
+
+  input {
+    width: 100%;
+    padding: 5px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .input-group {
+    margin-bottom: 15px;
+  }
+
+  .btn {
+    min-width: 70px;
+  }
+}
+
+.paperFocus {
+  &:focus {
+    outline: none;
+  }
+}
+
+.note-bar {
+  padding-bottom: 18px;
+  width: 250px;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 20;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+
+  @include media(">=tablet") {
+    width: 220px;
+    position: relative;
+    transform: translate(0);
+  }
+
+  @include media(">=widescreen") {
+    width: 280px;
+  }
+
+  &.toggle-active {
+    transform: translateX(0);
+
+    .toggle-bar {
+      i {
+        pointer-events: none;
+        transform: rotateY(180deg);
+      }
+    }
+  }
+
+  .toggle-bar {
+    content: "\e902";
+    font-family: "icomoon";
+    color: white;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    width: 20px;
+    background: #000;
+    border-radius: 0 5px 5px 0;
+    @extend %d-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: color 0.2s linear;
+
+    i {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    @include media(">=tablet") {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+      color: #81ecec;
+    }
+  }
+
+  .block-title {
+    @extend %d-flex;
+    position: relative;
+    align-items: center;
+    padding: 15px 50px 15px 35px;
+    background: #9ad1d4;
+    color: white;
+
+    @include media(">=desktop") {
+      padding: 20px 50px 20px 35px;
+    }
+
+    h3 {
+      margin-bottom: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 1.5rem;
+      line-height: 1.2;
+
+      @include media(">=tablet") {
+        font-size: 2rem;
+      }
+    }
+
+    .icon-wrap {
+      position: absolute;
+      top: 50%;
+      left: 8px;
+      transform: translateY(-50%);
+      @include size(20px);
+      @extend %circle;
+      transition: background 0.2s linear;
+
+      @include media(">=tablet") {
+        top: calc(50% - 1px);
+      }
+
+      @include media(">=desktop") {
+        top: 50%;
+      }
+
+      &:hover {
+        background: #fff;
+
+        a {
+          color: #9ad1d4;
+        }
+      }
+
+      a {
+        @extend %d-flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: color 0.2s linear;
+      }
+
+      svg {
+        font-size: 0.8rem;
+        line-height: 1;
+
+        @include media(">=tablet") {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .icon-holder {
+      @extend %circle;
+      @include size(25px);
+      @extend %d-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      color: #000000;
+      transition: border 0.2s linear;
+      border: 2px solid transparent;
+
+      @include media(">=widescreen") {
+        @include size(28px);
+      }
+
+      svg {
+        font-size: 2rem;
+        line-height: 1;
+        color: #fff;
+      }
+
+      &:hover {
+        cursor: pointer;
+        border: 2px solid #fff;
+      }
+    }
+  }
+}
+
+.notes-list {
+  @extend %list-reset;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  li {
+    transition: background 0.2s linear;
+    position: relative;
+
+    &.active {
+      background: #f2f2f2;
+    }
+
+    &:hover {
+      background: #e0e0e0;
+      cursor: pointer;
+    }
+  }
+
+  a {
+    color: #424242;
+    text-decoration: none;
+    display: block;
+    padding: 10px 30px 10px 10px;
+
+    @include media(">=widescreen") {
+      padding: 15px 40px 15px 20px;
+    }
+  }
+
+  .menu-button {
+    position: absolute;
+    color: #000000;
+    top: 10px;
+    right: 3px;
+
+    @include media(">=widescreen") {
+      top: 14px;
+      right: 10px;
+    }
+
+    button {
+      @extend %circle;
+      @include size(20px);
+      min-width: auto;
+      padding: 0 !important;
+      z-index: 5;
+      transition: background 0.2s linear;
+
+      @include media(">=widescreen") {
+        @include size(26px);
+      }
+    }
+
+    svg {
+      font-size: 1.3rem;
+      line-height: 1;
+
+      @include media(">=widescreen") {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+.note {
+  position: relative;
+  @extend %d-flex;
+  padding-left: 15px;
+
+  @include media(">=widescreen") {
+    padding-left: 20px;
+  }
+
+  .icon-holder {
+    position: absolute;
+    top: -2px;
+    left: 0;
+
+    @include media(">=desktop") {
+      top: 1px;
+    }
+
+    svg {
+      font-size: 1.1rem;
+      line-height: 1;
+
+      @include media(">=desktop") {
+        font-size: 1.6rem;
+      }
+    }
+  }
+
+  .text-holder {
+    // flex: 1;
+    width: 100%;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  h4 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+
+    @include media(">=desktop") {
+      font-size: 1.7rem;
+      line-height: 1.3;
+      margin-bottom: 5px;
+    }
+  }
+
+  .content-holder {
+    overflow: hidden;
+    word-wrap: break-word;
+    max-height: 40px;
+    margin-bottom: 5px;
+    line-height: 1.2;
+
+    @include media(">=desktop") {
+      font-size: 1.5rem;
+    }
+  }
+
+  &-content {
+    flex: 1;
+    position: relative;
+    height: 100%;
+    padding: 15px 20px 10px 30px;
+
+    @include media(">=tablet") {
+      padding: 50px 25px 20px;
+    }
+    @include media(">=desktop") {
+      padding: 50px 50px 20px;
+    }
+
+    .output-block {
+      width: 100%;
+      font-size: 1.3rem;
+      line-height: 1.2;
+      font-weight: 300;
+      text-decoration: none;
+      color: #000000;
+      @extend %d-flex;
+      flex-direction: column;
+      cursor: text;
+      padding: 12px 15px;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      @include media(">=tablet") {
+        font-size: 1.5rem;
+      }
+      @include media(">=desktop") {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        line-height: 1.2;
+        margin-bottom: 32px;
+
+        @include media(">=tablet") {
+          font-size: 1.8rem;
+          margin-bottom: 30px;
+        }
+        @include media(">=desktop") {
+          // font-size: 2rem;
+        }
+      }
+
+      p {
+        flex: 1;
+      }
+    }
+
+    .button-group {
+      padding-left: 10px;
+      @extend %d-flex;
+    }
+
+    .edit-form {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 5;
+      font-size: 1.2rem;
+      line-height: 1;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      background: #ecf0f1;
+      padding: 15px 20px 10px 30px;
+
+      @include media(">=tablet") {
+        padding: 51px 25px 20px;
+      }
+      @include media(">=desktop") {
+        padding: 51px 50px 20px;
+      }
+
+      input {
+        border: none;
+        width: 100%;
+        background: transparent;
+        padding: 12px 15px;
+        border-radius: 5px;
+        transition: background 0.2s ease-in;
+        &::placeholder {
+          color: #000;
+        }
+
+        &:focus,
+        &:hover {
+          outline: none;
+          background: rgba(#ccc, 0.3);
+        }
+      }
+
+      .note-title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        line-height: 1.2;
+        margin-bottom: 8px;
+
+        @include media(">=tablet") {
+          font-size: 1.8rem;
+        }
+
+        @include media(">=desktop") {
+          font-size: 1.8rem;
+        }
+      }
+
+      .note-text {
+        font-size: 1.3rem;
+        line-height: 1.2;
+        font-weight: 300;
+        margin-bottom: 20px;
+
+        @include media(">=tablet") {
+          font-size: 1.5rem;
+        }
+
+        @include media(">=desktop") {
+          font-size: 1.8rem;
+        }
+
+        textarea {
+          &:hover,
+          &:focus {
+            background: transparent;
+          }
+        }
+      }
+
+      textarea {
+        resize: none;
+        width: 100%;
+        background: transparent;
+        border: 0;
+        padding: 12px 15px;
+        border-radius: 5px;
+        transition: background 0.2s ease-in;
+
+        @include media(">=tablet") {
+          padding: 11px 15px;
+        }
+
+        &::placeholder {
+          color: #000;
+        }
+        &:focus,
+        &:hover {
+          outline: none;
+          background: rgba(#ccc, 0.3);
+        }
+      }
+
+      .btn {
+        min-width: 75px;
+        border-radius: 20px;
+        color: white;
+        background: #f39c12;
+        border: 1px solid #f39c12;
+        transition: all 0.2s linear;
+        padding: 5px 10px;
+        margin: 0 6px;
+
+        &:hover {
+          background: transparent;
+          color: #f39c12;
+        }
+      }
+    }
+  }
+}
+
+.newNote-block {
+  flex: 1;
+  padding: 15px 20px 10px 30px;
+  color: #000;
+
+  @include media(">=tablet") {
+    padding: 50px 25px 20px;
+  }
+
+  @include media(">=desktop") {
+    padding: 50px 50px 20px;
+  }
+
+  .form-title {
+    font-size: 2rem;
+    line-height: 1;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 3px;
+
+    @include media(">=desktop") {
+      font-size: 2rem;
+    }
+  }
+
+  .form-content {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    padding: 12px 15px;
+    border-radius: 5px;
+    transition: background 0.2s ease-in;
+
+    &::placeholder {
+      color: #000;
+    }
+
+    &:focus,
+    &:hover {
+      outline: none;
+      background: rgba(#ccc, 0.3);
+    }
+  }
+
+  textarea {
+    resize: none;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    padding: 12px 15px;
+    border-radius: 5px;
+
+    &::placeholder {
+      color: #000;
+    }
+    &:focus,
+    &:hover {
+      outline: none;
+    }
+  }
+
+  .title-block {
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-bottom: 3px;
+    font-size: 1.5rem;
+    line-height: 1;
+
+    @include media(">=desktop") {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+  }
+
+  .text-block {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    line-height: 1.2;
+
+    @include media(">=desktop") {
+      font-size: 1.8rem;
+    }
+  }
+
+  .btn {
+    min-width: 90px;
+    border-radius: 20px;
+    color: white;
+    background: #f39c12;
+    border: 1px solid #f39c12;
+    transition: all 0.2s linear;
+    padding: 5px 10px 6px;
+    margin-left: 15px;
+
+    @include media(">=desktop") {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    &:hover {
+      background: transparent;
+      color: #f39c12;
+    }
+  }
+}
+
+.log-form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  min-height: 100vh;
+
+  h1 {
+    font-weight: bold;
+    margin: 0 0 5px;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    margin: 10px 0 15px;
+  }
+
+  span {
+    font-size: 12px;
+  }
+
+  a {
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 15px 0;
+  }
+
+  button {
+    border-radius: 20px;
+    border: 1px solid #ff4b2b;
+    background-color: #ff4b2b;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease-in, color 0.2s ease-in;
+    margin-bottom: 20px;
+
+    &:hover {
+      background: transparent;
+      color: #ff4b2b;
+      cursor: pointer;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  form {
+    background-color: #ffffff;
+    // background: linear-gradient(to right, #ff4b2b, #ff416c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 50px 50px;
+    min-height: 100%;
+    text-align: center;
+  }
+
+  input {
+    background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+  }
+
+  .input-group {
+    width: 100%;
+  }
+
+  .container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px;
+  }
+
+  .form-container {
+    position: absolute;
+    top: 0;
+    min-height: 100%;
+  }
+
+  .log-in-container {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 2;
+    @extend %d-flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #ff4b2b, #ff416c);
+    padding: 50px 0;
+
+    .text-block {
+      font-size: 0.8rem;
+      line-height: 1;
+
+      a {
+        font-size: 1rem;
+        color: #ff4b2b;
+        transition: color 0.2s linear;
+
+        &:hover {
+          color: #734dba;
+        }
+      }
+    }
+  }
+}
+
+.input-error {
+  input {
+    outline: 1px solid #ff4b2b !important;
+    color: #ff4b2b !important;
+
+    &::placeholder {
+      color: #ff4b2b !important;
+    }
+  }
+}
+
+.error-text {
+  color: #ff4b2b;
+  text-align: left;
+  padding-top: 25px;
+
+  .h3 {
+    display: block;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  &-wrap {
+    font-size: 0.8rem;
+    line-height: 1;
+    color: #ff4b2b;
+    text-align: left;
+    position: absolute;
+    bottom: -10px;
+    left: 5px;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.reason-list {
+  @extend %list-reset;
+  padding: 10px 0 0 20px;
+  counter-reset: list-counter;
+
+  li {
+    margin-bottom: 10px;
+    position: relative;
+
+    &:before {
+      counter-increment: list-counter;
+      content: counter(list-counter) ".";
+      position: absolute;
+      top: -1px;
+      left: -15px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.social-icons {
+  @extend %d-flex;
+  @extend %list-reset;
+
+  li {
+    padding: 5px 8px;
+    transition: color 0.2s linear;
+    font-size: 20px;
+
+    &:hover {
+      color: red;
+      cursor: pointer;
+    }
+  }
+}
+
+.signup-form,
+.signin-form {
+  max-width: 40%;
+  width: 100%;
+
+  .input-group {
+    position: relative;
+    margin-bottom: 6px;
+
+    &.invalid-error {
+      .invalid-error-text {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    &.empty-error {
+      .empty-error-text {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .btn-group {
+    padding-top: 10px;
+  }
+}

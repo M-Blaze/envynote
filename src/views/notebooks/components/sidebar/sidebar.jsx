@@ -2,16 +2,70 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { setActiveNotebook, addNotebook } from "../../../../store/action";
-import NotebookModal from "./components/NotebookModal";
-import NotebookMenu from "../../../../components/NotebookMenu";
+import NotebookModal from "../NotebookModal";
+import NotebookMenu from "../NotebookMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import AddIcon from "@material-ui/icons/Add";
 
 class Sidebar extends Component {
-  componentDidMount() {
-    this.props.setActiveNotebook(this.props.match.params.id);
+  constructor() {
+    super();
+    this.state = {
+      isSidebarOpen: false
+    };
   }
+
+  componentDidMount() {
+    const routeId = this.props.match.params.id;
+    this.props.setActiveNotebook(routeId);
+  }
+
+  clickHandler = id => {
+    if (this.props.activeNotebook.id !== id) {
+      this.props.setActiveNotebook(id);
+      this.props.fetchHandler(true);
+      this.closeSidebar();
+    }
+  };
+
+  setIsSidebarOpen = value => {
+    this.setState({
+      isSidebarOpen: value
+    });
+  };
+
+  openSidebar = () => {
+    this.setIsSidebarOpen(true);
+    document.body.addEventListener("click", this.closeSidebarConditionally);
+  };
+
+  closeSidebar = () => {
+    this.setIsSidebarOpen(false);
+    document.body.removeEventListener("click", this.closeSidebarConditionally);
+  };
+
+  closeSidebarConditionally = e => {
+    const sidebarId = "notebook-sidebar";
+    const itemMenuClass = "notebook-menu";
+    const target = e.target;
+    const sidebarContainer = document.getElementById(sidebarId);
+    if (
+      sidebarContainer.contains(target) ||
+      target.parentElement.classList.contains(itemMenuClass)
+    ) {
+      return;
+    }
+    this.closeSidebar();
+  };
+
+  toggleSidebar = () => {
+    if (!this.state.isSidebarOpen) {
+      this.openSidebar();
+      return;
+    }
+    this.closeSidebar();
+  };
 
   render() {
     const modalProps = {
@@ -22,7 +76,15 @@ class Sidebar extends Component {
       action: this.props.addNotebook
     };
     return (
-      <div className="notebook-bar">
+      <div
+        id="notebook-sidebar"
+        className={`notebook-sidebar ${
+          this.state.isSidebarOpen ? "toggle-active" : ""
+        }`}
+      >
+        <div onClick={this.toggleSidebar} className="toggle-bar">
+          <i className="icon-log-in"></i>
+        </div>
         <div className="block-title">
           <h3>Notebooks</h3>
           <NotebookModal modalProps={modalProps} />
@@ -39,7 +101,7 @@ class Sidebar extends Component {
                   }`}
                 >
                   <Link
-                    onClick={() => this.props.setActiveNotebook(id)}
+                    onClick={() => this.clickHandler(id)}
                     to={`/notebooks/${id}`}
                     className="note-opener"
                   >
@@ -50,7 +112,13 @@ class Sidebar extends Component {
                       <div className="notebook-title">{name}</div>
                     </div>
                   </Link>
-                  {index !== 0 ? <NotebookMenu inputVal={notebook} /> : null}
+                  {index !== 0 ? (
+                    <NotebookMenu
+                      openSidebar={this.openSidebar}
+                      closeSidebar={this.closeSidebar}
+                      inputVal={notebook}
+                    />
+                  ) : null}
                 </li>
               );
             })}

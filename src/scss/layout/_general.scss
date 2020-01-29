@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+  margin-top: 0;
+}
+
+html {
+  font-size: $base-font-size;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background: #ecf0f1;
+  font-size: 1.5rem;
+  line-height: 1;
+
+  @include media(">=widescreen") {
+    font-size: 1.7rem;
+  }
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+p {
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+#wrapper {
+  overflow: hidden;
+  position: relative;
+  min-width: 320px;
+
+  > .container {
+    flex-direction: column;
+    height: 100vh;
+    @include media(">=tablet") {
+      flex-direction: row;
+    }
+  }
+}

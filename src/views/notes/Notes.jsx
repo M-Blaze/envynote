@@ -5,6 +5,7 @@ import NoteContent from "./components/NoteContent";
 import NewNote from "./components/NewNote";
 import { fetchNotes } from "../../store/action";
 import { connect } from "react-redux";
+import Spinner from "../../components/Spinner";
 
 class Notes extends Component {
   constructor() {
@@ -15,15 +16,19 @@ class Notes extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchNotes(this.props.match.params.id).then(() => {
-      this.setState({
-        isFetching: false
+    this.props
+      .fetchNotes(this.props.user, this.props.match.params.id)
+      .then(() => {
+        this.setState({
+          isFetching: false
+        });
       });
-    });
   }
 
   render() {
-    return this.state.isFetching ? null : (
+    return this.state.isFetching ? (
+      <Spinner />
+    ) : (
       <React.Fragment>
         <Sidebar />
         <Switch>
@@ -38,4 +43,11 @@ class Notes extends Component {
   }
 }
 
-export default connect(null, { fetchNotes })(Notes);
+const mapStateToProps = state => {
+  const { user } = state;
+  return {
+    user
+  };
+};
+
+export default connect(mapStateToProps, { fetchNotes })(Notes);

@@ -2,16 +2,51 @@ import React, { Component } from "react";
 import Sidebar from "./components/Sidebar";
 import Notes from "./components/Notes";
 import { connect } from "react-redux";
-import { Route, Redirect } from "react-router-dom";
+import { Route } from "react-router-dom";
 class Notebooks extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isFetching: false
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const prevActiveNotebookId = prevProps.activeNotebook.id;
+    if (
+      prevActiveNotebookId !== this.props.defaultNotebookId &&
+      prevState.isFetching === false &&
+      prevActiveNotebookId !== this.props.activeNotebook.id
+    ) {
+      this.fetchStateHandler(true);
+    }
+  }
+
+  fetchStateHandler = stateParam => {
+    this.setState({
+      isFetching: stateParam
+    });
+  };
+
   render() {
     const notebookComponents = (
       <React.Fragment>
-        {this.props.location.pathname === "/" && (
-          <Redirect to={`/notebooks/${this.props.defaultNotebookId}`} />
-        )}
-        <Route path="/notebooks/:id" component={Sidebar} />
-        <Route path="/notebooks/:id" component={Notes} />
+        <Route
+          path="/notebooks/:id"
+          render={props => (
+            <Sidebar {...props} fetchHandler={this.fetchStateHandler} />
+          )}
+        />
+        <Route
+          path="/notebooks/:id"
+          render={props => (
+            <Notes
+              {...props}
+              isFetching={this.state.isFetching}
+              fetchHandler={this.fetchStateHandler}
+            />
+          )}
+        />
       </React.Fragment>
     );
 
@@ -22,7 +57,8 @@ class Notebooks extends Component {
 const mapStateToProps = state => {
   return {
     notebooks: state.notebooks,
-    defaultNotebookId: state.defaultNotebookId
+    defaultNotebookId: state.defaultNotebookId,
+    activeNotebook: state.activeNotebook
   };
 };
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { fetchNotebooks, setDefaultNotebookId } from "../store/action";
+import { fetchNotebooks } from "../store/action";
 import { connect } from "react-redux";
+import ProfileBar from "./profileBar";
 import Spinner from "../components/Spinner";
 
 class MainLayout extends Component {
@@ -13,8 +13,7 @@ class MainLayout extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchNotebooks().then(id => {
-      this.props.setDefaultNotebookId(id);
+    this.props.fetchNotebooks(this.props.userId).then(() => {
       this.setState({ isFetchingNotebooks: false });
     });
   }
@@ -23,14 +22,7 @@ class MainLayout extends Component {
     return (
       <div id="wrapper">
         <div className="container d-flex">
-          <div className="profile-bar">
-            <div className="logo">
-              <Link to="/">
-                <img src="/assets/images/envynote.png" alt="Envy Note" />
-              </Link>
-            </div>
-            <div className="profile-button">M</div>
-          </div>
+          <ProfileBar />
           {this.state.isFetchingNotebooks ? <Spinner /> : this.props.children}
         </div>
       </div>
@@ -38,6 +30,14 @@ class MainLayout extends Component {
   }
 }
 
-export default connect(null, { fetchNotebooks, setDefaultNotebookId })(
-  MainLayout
-);
+const mapStateToProps = state => {
+  const { user, notebooks } = state;
+  return {
+    userId: user,
+    notebooks
+  };
+};
+
+export default connect(mapStateToProps, {
+  fetchNotebooks
+})(MainLayout);

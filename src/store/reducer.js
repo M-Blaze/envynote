@@ -1,6 +1,18 @@
 const reducer = (state, action) => {
   const payload = action.payload;
   switch (action.type) {
+    case "SET_USER":
+      return {
+        ...state,
+        user: payload
+      };
+
+    case "SET_USERNAME":
+      return {
+        ...state,
+        username: payload
+      };
+
     case "SET_NOTEBOOKS":
       return { ...state, notebooks: payload };
 
@@ -22,11 +34,11 @@ const reducer = (state, action) => {
         activeNote: payload
       };
 
-    case "SET_DEFAULT_NOTEBOOK_ID":
-      return {
-        ...state,
-        defaultNotebookId: payload
-      };
+    // case "SET_DEFAULT_NOTEBOOK_ID":
+    //   return {
+    //     ...state,
+    //     defaultNotebookId: payload
+    //   };
 
     default:
       return state;
