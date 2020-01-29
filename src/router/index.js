@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import MainLayout from "../layout/MainLayout";
 import Notebooks from "../views/notebooks";
 import Notes from "../views/notes";
-import EditProfile from "../views/editProfilePage";
 import SignUpForm from "../views/signUpForm";
 import SignInForm from "../views/signInForm";
 import { authStateChange, getUsername } from "../store/action";
@@ -39,7 +38,6 @@ class Router extends React.Component {
               <Switch>
                 <Route path="/notebook/:id/:slug" component={Notes} />
                 <Route path="/notebooks/:id" component={Notebooks} />
-                <Route path="/edit-profile" component={EditProfile} />
                 <Route render={() => <Redirect to="/notebooks/general" />} />
               </Switch>
             </MainLayout>
