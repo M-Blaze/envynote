@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { signIn, googleLogin } from "../store/action";
-import ErrorTextBlock from "./ErrorTextBlock";
+import { signIn, googleLogin } from "../../store/action";
+import ErrorTextBlock from "../../components/ErrorTextBlock";
 
 function SignInForm({ signIn, googleLogin }) {
   const [input, setInput] = useState({ email: "", password: "" });

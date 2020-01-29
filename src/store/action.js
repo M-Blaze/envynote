@@ -217,16 +217,23 @@ export const signOut = () => () => {
 
 export const getUsername = userId => dispatch => {
   return getUsernameApi(userId).then(doc => {
+    const { username, email } = doc[0];
     dispatch({
       type: "SET_USERNAME",
-      payload: doc[0].username
+      payload: username
+    });
+    dispatch({
+      type: "SET_EMAIL",
+      payload: email
     });
   });
 };
 
 export const googleLogin = () => dispatch => {
   return googleLoginApi().then(userDoc => {
-    const { uid, displayName } = userDoc.user;
+    console.log(userDoc);
+
+    const { uid, displayName, email } = userDoc.user;
     getUsernameApi(uid).then(doc => {
       if (doc.length !== 0) {
         dispatch({
@@ -234,7 +241,7 @@ export const googleLogin = () => dispatch => {
           payload: doc[0].username
         });
       } else {
-        addUserApi({ userId: uid, username: displayName }).then(() => {
+        addUserApi({ userId: uid, username: displayName, email }).then(() => {
           dispatch({
             type: "SET_USERNAME",
             payload: displayName

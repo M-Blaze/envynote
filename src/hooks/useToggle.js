@@ -1,29 +1,34 @@
 import { useState } from "react";
 
-export default function useToggle(targetWrapper, targetClass) {
-  const [hasShown, setHasShown] = useState(false);
+export default function useToggle(popupWrapper) {
+  const [isShown, setIsShown] = useState(false);
 
-  function toggleOptions(e) {
-    let target = e.target;
-    if (target.classList.contains(targetClass)) {
-      setHasShown(!hasShown);
-      return;
-    }
-
-    while (target.parentElement) {
-      if (target.parentElement.classList.contains(targetWrapper)) {
-        setHasShown(true);
-        return;
-      }
-      if (target.parentElement.tagName === "BODY") {
-        if (hasShown) {
-          setHasShown(false);
-        }
-        return;
-      }
-      target = target.parentElement;
-    }
+  function showOptions() {
+    setIsShown(true);
+    document.body.addEventListener("click", closePopupConditionally);
   }
 
-  return [hasShown, toggleOptions];
+  function hideOptions() {
+    setIsShown(false);
+    document.body.removeEventListener("click", closePopupConditionally);
+  }
+
+  function toggleOptions() {
+    if (isShown) {
+      hideOptions();
+      return;
+    }
+    showOptions();
+  }
+
+  function closePopupConditionally(e) {
+    const target = e.target;
+    const popupContainer = document.getElementById(popupWrapper);
+    if (popupContainer.contains(target)) {
+      return;
+    }
+    hideOptions();
+  }
+
+  return [isShown, toggleOptions, closePopupConditionally];
 }

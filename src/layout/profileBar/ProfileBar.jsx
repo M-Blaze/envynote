@@ -5,24 +5,24 @@ import ProfileOptions from "./components/profileOptions";
 import useToggle from "../../hooks/useToggle";
 
 function ProfileBar({ profileAlphabet }) {
-  const [isOptionsVisible, toggleOptions] = useToggle(
-    "profile-avatar",
-    "profile-button"
+  const [isOptionsVisible, toggleOptions, closePopupConditionally] = useToggle(
+    "profile-avatar"
   );
-
   useEffect(() => {
-    document.body.addEventListener("click", toggleOptions);
     return function cleanUp() {
-      document.body.removeEventListener("click", toggleOptions);
+      document.body.removeEventListener("click", closePopupConditionally);
     };
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return profileAlphabet === "" ? null : (
     <div className="profile-bar">
       <Logo />
-      <div className="profile-avatar">
+      <div id="profile-avatar" className="profile-avatar">
         <ProfileOptions display={isOptionsVisible} />
-        <div className="profile-button">{profileAlphabet}</div>
+        <div onClick={toggleOptions} className="profile-button">
+          {profileAlphabet}
+        </div>
       </div>
     </div>
   );

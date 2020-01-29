@@ -5,7 +5,8 @@ const state = {
   notes: [],
   activeNote: {},
   user: "",
-  username: ""
+  username: "",
+  email: ""
 };
 
 export default state;
