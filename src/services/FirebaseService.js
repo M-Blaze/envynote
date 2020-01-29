@@ -68,6 +68,8 @@ export function getDocuments(collectionName, where, notebookId) {
 
 export function addDocument(collectionName, docData) {
   const timeStamp = getTimeStamp();
+  console.log(timeStamp);
+
   return db
     .collection(collectionName)
     .add({ ...docData, createdAt: timeStamp })

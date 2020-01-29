@@ -10,9 +10,11 @@ function MenuItem(props) {
     return `${fullDate.getFullYear()}-${fullDate.getMonth() +
       1}-${fullDate.getDate()}`;
   }
+
   function formatDate(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
+
   return (
     <ul className="notes-list">
       {props.notes.map(note => {

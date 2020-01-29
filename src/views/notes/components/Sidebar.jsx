@@ -18,6 +18,10 @@ class Sidebar extends Component {
     }
   }
 
+  componentWillUnmount() {
+    document.body.removeEventListener("click", this.closeSidebarConditionally);
+  }
+
   setIsSidebarOpen = value => {
     this.setState({
       isSidebarOpen: value

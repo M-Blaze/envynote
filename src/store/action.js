@@ -116,11 +116,12 @@ export const fetchNotes = (userId, notebookId) => dispatch => {
 
 export const addNote = note => (dispatch, getState) => {
   return addNoteApi(note).then(newNote => {
-    console.log(newNote.createdAt);
-
+    console.log(newNote, typeof newNote);
     dispatch({
       type: "SET_NOTES",
-      payload: getState().notes.concat([newNote])
+      payload: getState().notes.concat([
+        { ...newNote, editedAt: new Date(), editedIn: true }
+      ])
     });
   });
 };

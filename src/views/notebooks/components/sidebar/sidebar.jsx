@@ -21,6 +21,10 @@ class Sidebar extends Component {
     this.props.setActiveNotebook(routeId);
   }
 
+  componentWillUnmount() {
+    document.body.removeEventListener("click", this.closeSidebarConditionally);
+  }
+
   clickHandler = id => {
     if (this.props.activeNotebook.id !== id) {
       this.props.setActiveNotebook(id);

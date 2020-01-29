@@ -8,7 +8,7 @@
   }
 }
 
-//responsive mixin handler
-// @mixin media {
-
-// }
+@mixin d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
