@@ -1,20 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { signOut } from "../../../../store/action";
-import EditProfileMenu from "../editProfileMenu";
-// import { Link } from "react-router-dom";
 
-function ProfileOptions({ display, signOut, username, email }) {
-  const [showEditMenu, setShowEditMenu] = useState(true);
-
+function ProfileOptions({ display, signOut, username, email, toggleEditMenu }) {
   return (
     <div className={`profile-options ${display ? "show" : ""}`}>
-      {showEditMenu && <EditProfileMenu />}
       <ul className="profile-list">
         <li>
-          <div className="image-block">
+          <div className="image-block" id="profile-edit-block">
             {username.charAt(0)}
-            <div onClick={() => setShowEditMenu(true)} className="edit-button">
+            <div onClick={toggleEditMenu} className="edit-button">
               Edit
             </div>
           </div>

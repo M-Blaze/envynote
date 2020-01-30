@@ -251,3 +251,7 @@ export const googleLogin = () => dispatch => {
     });
   });
 };
+
+// export const uploadImage = () => dispatch => {
+
+// }

@@ -54,6 +54,7 @@
     line-height: 1;
     user-select: none;
   }
+
   &-avatar {
     position: relative;
     z-index: 99;
@@ -120,89 +121,24 @@
         left: calc(100% - 18px);
       }
     }
+  }
 
-    .form-wrapper {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      @extend %d-flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 50;
-      background: rgba(27, 27, 27, 0.66);
-    }
-
-    .edit-profile-form {
-      background: #fff;
-      @include media(">=desktop") {
-        width: 500px;
-      }
-    }
-
-    .input-group {
-      padding: 20px;
-    }
-
-    .input-file {
-      position: relative;
-      min-height: 150px;
-      padding-bottom: 40px;
-
-      input {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        opacity: 0;
-
-        &:hover {
-          cursor: grab;
-        }
-      }
-
-      .info-block {
-        text-align: center;
-        pointer-events: none;
-        padding: 10px;
-
-        strong {
-          display: block;
-          padding-top: 10px;
-          margin-bottom: 10px;
-        }
-      }
-
-      .label-block {
-        font-size: 1.3rem;
-        font-weight: 300;
-        text-align: center;
-        position: relative;
-        z-index: 5;
-
-        &:hover {
-          cursor: grab;
-        }
-
-        label {
-          border: 1px solid transparent;
-          padding: 8px 10px;
-          background: rgba(166, 163, 166, 0.23);
-          display: inline-block;
-
-          &:hover {
-            cursor: pointer;
-            border-color: red;
-          }
-        }
-      }
-
-      i {
-        font-size: 7rem;
-      }
-    }
+  .form-wrapper {
+    position: fixed;
+    top: 50%;
+    // bottom: 0;
+    left: 50%;
+    // right: 0;
+    text-align: left;
+    color: rgb(70, 70, 70);
+    transform: translate(-50%, -50%);
+    @extend %d-flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    background: rgba(27, 27, 27, 0.66);
+    box-shadow: 5px 5px 10px 5px rgba(#ccc, 0.4),
+      -5px 5px 15px 5px rgba(#ccc, 0.4);
   }
 
   &-list {
@@ -288,14 +224,137 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s linear, visibility 0.3s linear;
+      user-select: none;
     }
 
     .email-block {
       margin-bottom: 10px;
+      font-size: 1.3rem;
     }
 
     .username-block {
       margin-bottom: 8px;
+    }
+  }
+}
+
+#edit-profile-form-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  @extend %d-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  background: rgba(#000, 0.5);
+}
+
+.edit-profile-form {
+  background: #fff;
+  @include media(">=desktop") {
+    width: 500px;
+  }
+
+  input[type="text"] {
+    padding: 5px 10px;
+  }
+
+  .input-group {
+    padding: 20px;
+    font-size: 1.4rem;
+
+    &:first-child {
+      border-bottom: 1px solid #ccc;
+    }
+
+    &.username-wrap {
+      @extend %d-flex;
+      align-items: center;
+      padding: 25px 20px 20px;
+
+      input {
+        margin-left: 10px;
+        width: auto;
+        flex: 1;
+      }
+    }
+  }
+
+  label {
+    display: inline-block;
+    text-transform: uppercase;
+  }
+
+  .button-group {
+    padding: 20px 20px;
+    text-align: center;
+  }
+
+  .input-file {
+    position: relative;
+    min-height: 150px;
+    padding-bottom: 20px;
+
+    input[type="file"] {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+
+      &:hover {
+        cursor: grab;
+      }
+
+      &:focus {
+        & + .label-block label {
+          border-color: red;
+        }
+      }
+    }
+
+    .info-block {
+      text-align: center;
+      pointer-events: none;
+      padding: 10px;
+
+      strong {
+        display: block;
+        padding-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+
+    .label-block {
+      font-size: 1.3rem;
+      font-weight: 300;
+      text-align: center;
+      position: relative;
+      z-index: 5;
+
+      &:hover {
+        cursor: grab;
+      }
+
+      label {
+        border: 1px solid transparent;
+        padding: 8px 10px;
+        background: rgba(166, 163, 166, 0.23);
+        display: inline-block;
+        margin-bottom: 0;
+
+        &:hover {
+          cursor: pointer;
+          border-color: red;
+        }
+      }
+    }
+
+    i {
+      font-size: 7rem;
     }
   }
 }
