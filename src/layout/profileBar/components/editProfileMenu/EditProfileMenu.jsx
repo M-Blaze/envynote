@@ -62,7 +62,9 @@ function EditProfileMenu({ toggleEditMenu, username }) {
         <div className="input-group input-file">
           <div className="image-block">
             {username.charAt(0)}
-            <div className="icon-holder"></div>
+            <div className="icon-holder">
+              <i className="icon-camera"></i>
+            </div>
           </div>
           <input
             id="profile-image"
