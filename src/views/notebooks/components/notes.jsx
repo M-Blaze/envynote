@@ -13,7 +13,7 @@ class Notes extends Component {
       this.props
         .fetchNotes(this.props.user, this.props.activeNotebook.id)
         .then(() => {
-          this.props.fetchHandler(false);
+          this.props.setIsFetchingNotes(false);
         });
     }
   }
@@ -33,7 +33,7 @@ class Notes extends Component {
   render() {
     return (
       <div className="notebook-content">
-        {this.props.isFetching ? (
+        {this.props.isFetchingNotes ? (
           <Spinner />
         ) : (
           <React.Fragment>

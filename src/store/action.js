@@ -12,9 +12,11 @@ import {
   signInApi,
   signUpApi,
   googleLoginApi,
+  facebookLoginApi,
   addUserApi,
   uploadImageInFirebase,
-  updateUser
+  updateUser,
+  resetPasswordInFirebase
 } from "../api/api";
 
 import { auth, storage } from "../services/FirebaseService";
@@ -243,21 +245,84 @@ export const getUserData = userId => dispatch => {
 
 export const googleLogin = () => dispatch => {
   return googleLoginApi().then(userDoc => {
-    const { uid, displayName, email } = userDoc.user;
+    dispatch({
+      type: "SET_USERNAME",
+      payload: "logged from external API"
+    });
+    const { uid, displayName, email, photoURL } = userDoc.user;
     getUsernameApi(uid).then(doc => {
       if (doc.length !== 0) {
+        const { username, email, id, imageURL } = doc[0];
         dispatch({
           type: "SET_USERNAME",
-          payload: doc[0].username
+          payload: username
         });
-      } else {
-        addUserApi({ userId: uid, username: displayName, email }).then(() => {
+        dispatch({
+          type: "SET_EMAIL",
+          payload: email
+        });
+        dispatch({
+          type: "SET_PROFILE_ID",
+          payload: id
+        });
+        if (imageURL) {
           dispatch({
-            type: "SET_USERNAME",
-            payload: displayName
+            type: "SET_PROFILE_IMAGE",
+            payload: imageURL
           });
-        });
+        }
+        return;
       }
+      addUserApi({
+        userId: uid,
+        username: displayName,
+        email,
+        imageURL: photoURL
+      }).then(() => {
+        getUsernameApi(uid);
+      });
+    });
+  });
+};
+
+export const facebookLogin = () => dispatch => {
+  return facebookLoginApi().then(userDoc => {
+    dispatch({
+      type: "SET_USERNAME",
+      payload: "logged from external API"
+    });
+    const { uid, displayName, email, photoURL } = userDoc.user;
+    getUsernameApi(uid).then(doc => {
+      if (doc.length !== 0) {
+        const { username, email, id, imageURL } = doc[0];
+        dispatch({
+          type: "SET_USERNAME",
+          payload: username
+        });
+        dispatch({
+          type: "SET_EMAIL",
+          payload: email
+        });
+        dispatch({
+          type: "SET_PROFILE_ID",
+          payload: id
+        });
+        if (imageURL) {
+          dispatch({
+            type: "SET_PROFILE_IMAGE",
+            payload: imageURL
+          });
+        }
+        return;
+      }
+      addUserApi({
+        userId: uid,
+        username: displayName,
+        email,
+        imageURL: photoURL
+      }).then(() => {
+        getUsernameApi(uid);
+      });
     });
   });
 };
@@ -291,4 +356,8 @@ export const editUsername = userInfo => dispatch => {
     type: "SET_USERNAME",
     payload: username
   });
+};
+
+export const resetPassword = email => () => {
+  return resetPasswordInFirebase(email);
 };

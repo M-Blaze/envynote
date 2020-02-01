@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import Button from "../../../../components/button";
+import CustomButton from "../../../../components/button";
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
 import { uploadProfileImage, editUsername } from "../../../../store/action";
@@ -144,9 +144,9 @@ function EditProfileMenu({
           />
         </div>
         <div className="button-group">
-          <Button text="save">
+          <CustomButton type="submit" text="save">
             <i className="icon-arrow-right"></i>
-          </Button>
+          </CustomButton>
         </div>
       </form>
     </div>

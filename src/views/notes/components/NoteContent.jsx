@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Route, Link } from "react-router-dom";
+import { withRouter, Route, Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { setActiveNote } from "../../../store/action";
 import Form from "./Form";
@@ -28,9 +28,10 @@ class NoteContent extends Component {
   };
 
   render() {
-    return (
+    const url = this.props.match.url;
+    return this.props.activeNote ? (
       <div className="note-content">
-        <Link to={`${this.props.match.url}/edit`} className="output-block">
+        <Link to={`${url}/edit`} className="output-block">
           <h2 onClick={() => this.focusElementHandler("title")}>
             {this.props.activeNote.title}
           </h2>
@@ -39,16 +40,18 @@ class NoteContent extends Component {
           </p>
         </Link>
         <Route
-          path={`${this.props.match.url}/edit`}
+          path={`${url}/edit`}
           render={() => (
             <Form
               history={this.props.history}
               focusElement={this.state.focusElement}
-              path={this.props.match.url}
+              path={url}
             />
           )}
         />
       </div>
+    ) : (
+      <Redirect to={`/notebook/${this.props.match.params.id}/notes/new`} />
     );
   }
 }

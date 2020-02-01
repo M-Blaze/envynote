@@ -7,7 +7,8 @@ class Notebooks extends Component {
   constructor() {
     super();
     this.state = {
-      isFetching: false
+      isFetching: false,
+      isFetchingNotes: false
     };
   }
 
@@ -18,13 +19,15 @@ class Notebooks extends Component {
       prevState.isFetching === false &&
       prevActiveNotebookId !== this.props.activeNotebook.id
     ) {
-      this.fetchStateHandler(true);
+      this.setState({
+        isFetching: true
+      });
     }
   }
 
-  fetchStateHandler = stateParam => {
+  setIsFetchingNotes = stateParam => {
     this.setState({
-      isFetching: stateParam
+      isFetchingNotes: stateParam
     });
   };
 
@@ -34,7 +37,7 @@ class Notebooks extends Component {
         <Route
           path="/notebooks/:id"
           render={props => (
-            <Sidebar {...props} fetchHandler={this.fetchStateHandler} />
+            <Sidebar {...props} setIsFetchingNotes={this.setIsFetchingNotes} />
           )}
         />
         <Route
@@ -42,8 +45,8 @@ class Notebooks extends Component {
           render={props => (
             <Notes
               {...props}
-              isFetching={this.state.isFetching}
-              fetchHandler={this.fetchStateHandler}
+              isFetchingNotes={this.state.isFetchingNotes}
+              setIsFetchingNotes={this.setIsFetchingNotes}
             />
           )}
         />

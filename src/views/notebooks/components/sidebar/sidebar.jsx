@@ -28,7 +28,7 @@ class Sidebar extends Component {
   clickHandler = id => {
     if (this.props.activeNotebook.id !== id) {
       this.props.setActiveNotebook(id);
-      this.props.fetchHandler(true);
+      this.props.setIsFetchingNotes(true);
       this.closeSidebar();
     }
   };

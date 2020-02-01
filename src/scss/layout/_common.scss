@@ -71,13 +71,13 @@
   .toggle-bar {
     content: "\e902";
     font-family: "icomoon";
-    color: white;
+    color: $white;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 100%;
     width: 20px;
-    background: #000;
+    background: $black;
     border-radius: 0 5px 5px 0;
     @extend %d-flex;
     align-items: center;
@@ -135,7 +135,7 @@
       top: 50%;
       right: 10px;
       transform: translateY(-50%);
-      color: #000000;
+      color: $black;
       transition: background 0.2s linear;
       @include media(">=widescreen") {
         @include size(30px);
@@ -174,7 +174,7 @@
     transition: background 0.2s linear, color 0.2s linear;
     margin-bottom: 1px;
     text-decoration: none;
-    color: #000000;
+    color: $black;
     display: block;
     position: relative;
 
@@ -214,7 +214,7 @@
     @include size(20px);
     @extend %circle;
     transform: translateY(-50%);
-    color: #000000;
+    color: $black;
 
     @include media(">=tablet") {
       @include size(26px);
@@ -363,7 +363,7 @@
       top: 50%;
       right: 5px;
       transform: translateY(-50%);
-      color: #000000;
+      color: $black;
       transition: background 0.2s linear;
 
       @include media(">=tablet") {
@@ -396,7 +396,7 @@
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    color: #000000;
+    color: $black;
 
     button {
       @extend %circle;
@@ -590,13 +590,13 @@
   .toggle-bar {
     content: "\e902";
     font-family: "icomoon";
-    color: white;
+    color: $white;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 100%;
     width: 20px;
-    background: #000;
+    background: $black;
     border-radius: 0 5px 5px 0;
     @extend %d-flex;
     align-items: center;
@@ -626,7 +626,7 @@
     align-items: center;
     padding: 15px 50px 15px 35px;
     background: #9ad1d4;
-    color: white;
+    color: $white;
 
     @include media(">=desktop") {
       padding: 20px 50px 20px 35px;
@@ -703,7 +703,7 @@
       top: 50%;
       right: 10px;
       transform: translateY(-50%);
-      color: #000000;
+      color: $black;
       transition: border 0.2s linear;
       border: 2px solid transparent;
 
@@ -764,7 +764,7 @@
 
   .menu-button {
     position: absolute;
-    color: #000000;
+    color: $black;
     top: 10px;
     right: 3px;
 
@@ -866,8 +866,6 @@
     position: relative;
     height: 100%;
     padding: 15px 20px 10px 30px;
-    background-image: url(/assets/images/bg.jpg);
-    background-size: cover;
 
     @include media(">=tablet") {
       padding: 50px 25px 20px;
@@ -882,7 +880,7 @@
       line-height: 1.2;
       font-weight: 300;
       text-decoration: none;
-      color: #000000;
+      color: $black;
       @extend %d-flex;
       flex-direction: column;
       cursor: text;
@@ -952,7 +950,7 @@
         border-radius: 5px;
         transition: background 0.2s ease-in;
         &::placeholder {
-          color: #000;
+          color: $black;
         }
 
         &:focus,
@@ -1013,7 +1011,7 @@
         }
 
         &::placeholder {
-          color: #000;
+          color: $black;
         }
         &:focus,
         &:hover {
@@ -1025,7 +1023,7 @@
       .btn {
         min-width: 75px;
         border-radius: 20px;
-        color: white;
+        color: $white;
         background: #f39c12;
         border: 1px solid #f39c12;
         transition: all 0.2s linear;
@@ -1044,7 +1042,7 @@
 .newNote-block {
   flex: 1;
   padding: 15px 20px 10px 30px;
-  color: #000;
+  color: $black;
 
   @include media(">=tablet") {
     padding: 50px 25px 20px;
@@ -1080,7 +1078,7 @@
     transition: background 0.2s ease-in;
 
     &::placeholder {
-      color: #000;
+      color: $black;
     }
 
     &:focus,
@@ -1099,7 +1097,7 @@
     border-radius: 5px;
 
     &::placeholder {
-      color: #000;
+      color: $black;
     }
     &:focus,
     &:hover {
@@ -1134,7 +1132,7 @@
   .btn {
     min-width: 90px;
     border-radius: 20px;
-    color: white;
+    color: $white;
     background: #f39c12;
     border: 1px solid #f39c12;
     transition: all 0.2s linear;
@@ -1164,6 +1162,10 @@
   h1 {
     font-weight: bold;
     margin: 0 0 5px;
+
+    @include media(">=tablet") {
+      margin-bottom: 10px;
+    }
   }
 
   p {
@@ -1191,8 +1193,8 @@
 
   button {
     border-radius: 20px;
-    border: 1px solid #ff4b2b;
-    background-color: #ff4b2b;
+    border: 1px solid $red;
+    background-color: $red;
     color: #ffffff;
     font-size: 12px;
     font-weight: bold;
@@ -1209,7 +1211,7 @@
 
     &:hover {
       background: transparent;
-      color: #ff4b2b;
+      color: $red;
       cursor: pointer;
     }
 
@@ -1274,7 +1276,7 @@
   .signup-container {
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(to right, #ff4b2b, #ff416c);
+    background: linear-gradient(to right, $red, #ff416c);
 
     width: 100%;
     z-index: 2;
@@ -1297,7 +1299,7 @@
 
       a {
         font-size: 1rem;
-        color: #ff4b2b;
+        color: $red;
         transition: color 0.2s linear;
         margin: 0;
 
@@ -1319,17 +1321,17 @@
 
 .input-error {
   input {
-    border: 1px solid #ff4b2b !important;
-    color: #ff4b2b !important;
+    border: 1px solid $red !important;
+    color: $red !important;
 
     &::placeholder {
-      color: #ff4b2b !important;
+      color: $red !important;
     }
   }
 }
 
 .error-text {
-  color: #ff4b2b;
+  color: $red;
   text-align: left;
   padding-top: 25px;
 
@@ -1342,7 +1344,7 @@
   &-wrap {
     font-size: 1rem;
     line-height: 1;
-    color: #ff4b2b;
+    color: $red;
     text-align: left;
     position: absolute;
     bottom: -5px;
@@ -1401,7 +1403,7 @@
     font-size: 20px;
 
     &:hover {
-      color: #ff4b2b;
+      color: $red;
       cursor: pointer;
     }
   }
@@ -1420,7 +1422,7 @@
   a {
     transition: color 0.2s linear;
     &:hover {
-      color: #ff4b2b;
+      color: $red;
     }
   }
 }
@@ -1464,5 +1466,143 @@
 .signup-form {
   .header-block {
     margin-bottom: 25px;
+  }
+}
+
+.password-reset-block {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(to right, $red, #ff416c);
+}
+
+.password-reset-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+  padding: 40px 20px 30px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+
+  input {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+
+    &:focus {
+      outline: none;
+      border-color: #734dba;
+    }
+  }
+
+  .text-block {
+    margin-bottom: 30px;
+    font-size: 1.7rem;
+    line-height: 1.2;
+  }
+
+  .input-group {
+    margin-bottom: 18px;
+    position: relative;
+  }
+
+  .invalid-error {
+    .invalid-text {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .empty-error {
+    .empty-text {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  %error-text {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    font-size: 1.4rem;
+    line-height: 1;
+    padding-left: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s linear;
+    color: $red;
+  }
+
+  .invalid-text,
+  .empty-text {
+    @extend %error-text;
+  }
+
+  .button-group {
+    text-align: center;
+  }
+}
+
+.message-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 40px 20px 30px;
+  border-radius: 5px;
+  text-align: center;
+  min-height: 180px;
+  @extend %d-flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 450px;
+  width: 100%;
+
+  h2 {
+    width: 100%;
+  }
+
+  &.success-modal {
+    h2 {
+      color: #1abc9c;
+    }
+  }
+
+  &.failure-modal {
+    h2 {
+      color: $red;
+    }
+
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  a {
+    text-decoration: none;
+    color: $black;
+    transition: color 0.2s linear;
+
+    &:hover {
+      color: $red;
+    }
+  }
+
+  .icon-holder {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    transition: color 0.2s linear;
+
+    &:hover {
+      cursor: pointer;
+      color: $red;
+    }
+
+    svg {
+      font-size: 1.8rem;
+    }
   }
 }

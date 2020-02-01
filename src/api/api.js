@@ -5,7 +5,8 @@ import {
   deleteDocument,
   getDocuments,
   auth,
-  provider,
+  googleProvider,
+  facebookProvider,
   storage
 } from "../services/FirebaseService";
 
@@ -61,11 +62,16 @@ export function getUsernameApi(userId) {
 }
 
 export function addUserApi(user) {
+  console.log("user added");
   return addDocument("User", user);
 }
 
 export function googleLoginApi() {
-  return auth.signInWithPopup(provider);
+  return auth.signInWithPopup(googleProvider);
+}
+
+export function facebookLoginApi() {
+  return auth.signInWithPopup(facebookProvider);
 }
 
 export function uploadImageInFirebase(filePath, userId, image) {
@@ -80,4 +86,8 @@ export function uploadImageInFirebase(filePath, userId, image) {
 
 export function updateUser(user) {
   return updateDocument("User", user.id, user);
+}
+
+export function resetPasswordInFirebase(email) {
+  return auth.sendPasswordResetEmail(email);
 }

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { signIn, googleLogin } from "../../store/action";
+import { signIn, googleLogin, facebookLogin } from "../../store/action";
 import ErrorTextBlock from "../../components/ErrorTextBlock";
 
-function SignInForm({ signIn, googleLogin }) {
+function SignInForm({ signIn, googleLogin, facebookLogin }) {
   const [input, setInput] = useState({ email: "", password: "" });
   const [error, setError] = useState({ email: false, password: false });
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
@@ -82,7 +82,7 @@ function SignInForm({ signIn, googleLogin }) {
           <div className="header-block">
             <h1>Login</h1>
             <ul className="social-icons">
-              <li>
+              <li onClick={facebookLogin}>
                 <i className="icon-facebook"></i>
               </li>
               <li onClick={googleLogin}>
@@ -156,4 +156,6 @@ function SignInForm({ signIn, googleLogin }) {
   );
 }
 
-export default connect(null, { signIn, googleLogin })(SignInForm);
+export default connect(null, { signIn, googleLogin, facebookLogin })(
+  SignInForm
+);

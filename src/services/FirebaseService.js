@@ -16,7 +16,8 @@ const app = firebase.initializeApp({
 
 export const db = app.firestore();
 export const auth = app.auth();
-export const provider = new firebase.auth.GoogleAuthProvider();
+export const facebookProvider = new firebase.auth.FacebookAuthProvider();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const storage = firebase.storage();
 function getTimeStamp() {
   return firebase.firestore.FieldValue.serverTimestamp();
@@ -69,8 +70,6 @@ export function getDocuments(collectionName, where, notebookId) {
 
 export function addDocument(collectionName, docData) {
   const timeStamp = getTimeStamp();
-  console.log(timeStamp);
-
   return db
     .collection(collectionName)
     .add({ ...docData, createdAt: timeStamp })

@@ -6,6 +6,7 @@ import Notebooks from "../views/notebooks";
 import Notes from "../views/notes";
 import SignUpForm from "../views/signUpForm";
 import SignInForm from "../views/signInForm";
+import PasswordResetForm from "../views/passwordResetForm";
 import { authStateChange, getUserData } from "../store/action";
 import Spinner from "../components/Spinner";
 
@@ -29,6 +30,7 @@ class Router extends React.Component {
             <Switch>
               <Route path="/signin" component={SignInForm} />
               <Route path="/signup" component={SignUpForm} />
+              <Route path="/forgot-password" component={PasswordResetForm} />
               <Route render={() => <Redirect to="/signin" />} />
             </Switch>
           </React.Fragment>
@@ -51,9 +53,10 @@ class Router extends React.Component {
 }
 
 const mapStateToProps = state => {
+  const { user, username } = state;
   return {
-    user: state.user,
-    username: state.username
+    user,
+    username
   };
 };
 

@@ -19,11 +19,13 @@ class MainLayout extends Component {
   }
 
   render() {
-    return (
+    return this.state.isFetchingNotebooks ? (
+      <Spinner />
+    ) : (
       <div id="wrapper">
         <div className="container d-flex">
           <ProfileBar />
-          {this.state.isFetchingNotebooks ? <Spinner /> : this.props.children}
+          {this.props.children}
         </div>
       </div>
     );
