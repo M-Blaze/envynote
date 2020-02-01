@@ -6,7 +6,7 @@ import Notebooks from "../views/notebooks";
 import Notes from "../views/notes";
 import SignUpForm from "../views/signUpForm";
 import SignInForm from "../views/signInForm";
-import { authStateChange, getUsername } from "../store/action";
+import { authStateChange, getUserData } from "../store/action";
 import Spinner from "../components/Spinner";
 
 class Router extends React.Component {
@@ -15,9 +15,9 @@ class Router extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { user, username } = this.props;
+    const { user, username, getUserData } = this.props;
     if (prevProps.user !== user && user !== "loggedOut" && username === "") {
-      this.props.getUsername(user);
+      getUserData(user);
     }
   }
 
@@ -57,6 +57,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { authStateChange, getUsername })(
-  Router
-);
+export default connect(mapStateToProps, {
+  authStateChange,
+  getUserData
+})(Router);

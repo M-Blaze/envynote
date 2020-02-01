@@ -53,6 +53,8 @@
     font-size: 12px;
     line-height: 1;
     user-select: none;
+    background-size: cover;
+    background-position: 50% 50%;
   }
 
   &-avatar {
@@ -144,10 +146,14 @@
   &-list {
     @extend %list-reset;
     color: #000;
-    padding: 25px 0;
+    padding: 15px 0;
     line-height: 1;
     overflow: hidden;
     text-align: center;
+
+    @include media(">=tablet") {
+      padding: 25px 0;
+    }
 
     @include media(">=widescreen") {
       font-size: 1.5rem;
@@ -195,6 +201,8 @@
       position: relative;
       z-index: 2;
       transition: color 0.2s linear;
+      background-size: cover;
+      background-position: 50% 50%;
 
       &:hover {
         cursor: pointer;
@@ -249,21 +257,64 @@
   justify-content: center;
   z-index: 99;
   background: rgba(#000, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s linear;
+
+  &.form-visible {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .edit-profile-form {
   background: #fff;
+  border-radius: 5px;
+  position: relative;
+  padding-top: 40px;
+  width: 280px;
+
   @include media(">=desktop") {
-    width: 500px;
+    width: 450px;
   }
 
   input[type="text"] {
     padding: 5px 10px;
   }
 
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    @include media(">=tablet") {
+      top: 13px;
+      right: 13px;
+    }
+
+    svg {
+      font-size: 2rem;
+      line-height: 1;
+      transition: color 0.2s linear;
+
+      @include media(">=desktop") {
+        font-size: 2.8rem;
+      }
+
+      &:hover {
+        cursor: pointer;
+        color: #00b894;
+      }
+    }
+  }
+
   .input-group {
     padding: 20px;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+
+    @include media(">=tablet") {
+      font-size: 1.4rem;
+    }
 
     &:first-child {
       border-bottom: 1px solid #ccc;
@@ -272,12 +323,20 @@
     &.username-wrap {
       @extend %d-flex;
       align-items: center;
-      padding: 25px 20px 20px;
+      padding: 15px 10px;
+
+      @include media(">=desktop") {
+        padding: 25px 20px 10px;
+      }
 
       input {
-        margin-left: 10px;
+        margin-left: 5px;
         width: auto;
         flex: 1;
+
+        @include media(">=tablet") {
+          margin-left: 10px;
+        }
       }
     }
   }
@@ -288,32 +347,48 @@
   }
 
   .button-group {
-    padding: 20px 20px;
     text-align: center;
+    padding: 0 20px 30px;
+    @include media(">=desktop") {
+      padding: 10px 20px 40px;
+    }
   }
 
   .input-file {
     position: relative;
-    min-height: 150px;
     padding-bottom: 20px;
+    @include size(100px);
+    @extend %d-flex;
+    @extend %circle;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0 auto;
+    background: #00b894;
+    color: #ffffff;
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 700;
+    transition: color 0.2s linear;
+
+    @include media(">=widescreen") {
+      @include size(120px);
+    }
+
+    &:hover {
+      color: #00b894;
+      cursor: grab;
+
+      .icon-holder {
+        opacity: 1;
+        visibility: visible;
+        color: #fff;
+      }
+    }
 
     input[type="file"] {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
       opacity: 0;
-
-      &:hover {
-        cursor: grab;
-      }
-
-      &:focus {
-        & + .label-block label {
-          border-color: red;
-        }
-      }
+      visibility: hidden;
     }
 
     .info-block {
@@ -328,33 +403,45 @@
       }
     }
 
-    .label-block {
-      font-size: 1.3rem;
-      font-weight: 300;
-      text-align: center;
-      position: relative;
-      z-index: 5;
+    label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      @extend %d-flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: 50% 50%;
 
       &:hover {
         cursor: grab;
-      }
-
-      label {
-        border: 1px solid transparent;
-        padding: 8px 10px;
-        background: rgba(166, 163, 166, 0.23);
-        display: inline-block;
-        margin-bottom: 0;
-
-        &:hover {
-          cursor: pointer;
-          border-color: red;
-        }
+        color: #00b894;
       }
     }
 
     i {
-      font-size: 7rem;
+      font-size: 2.3rem;
+    }
+
+    .icon-holder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      @extend %d-flex;
+      @extend %circle;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s linear, visibility 0.2s linear, color 0.2s linear;
+      color: #00b894;
+      z-index: 5;
     }
   }
 }

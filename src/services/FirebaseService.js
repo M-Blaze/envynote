@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 
 const app = firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -16,7 +17,7 @@ const app = firebase.initializeApp({
 export const db = app.firestore();
 export const auth = app.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
-
+export const storage = firebase.storage();
 function getTimeStamp() {
   return firebase.firestore.FieldValue.serverTimestamp();
 }

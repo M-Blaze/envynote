@@ -79,16 +79,18 @@ function SignInForm({ signIn, googleLogin }) {
           onSubmit={submitHandler}
           action="#"
         >
-          <h1>Login</h1>
-          <ul className="social-icons">
-            <li>
-              <i className="icon-facebook"></i>
-            </li>
-            <li onClick={googleLogin}>
-              <i className="icon-google"></i>
-            </li>
-          </ul>
-          <span>or use your account</span>
+          <div className="header-block">
+            <h1>Login</h1>
+            <ul className="social-icons">
+              <li>
+                <i className="icon-facebook"></i>
+              </li>
+              <li onClick={googleLogin}>
+                <i className="icon-google"></i>
+              </li>
+            </ul>
+            <span>or use your account</span>
+          </div>
           <div
             className={`input-group ${
               error.email ? `input-error ${errorType(error.email)}` : ""

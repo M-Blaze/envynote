@@ -12,9 +12,12 @@ import {
   signInApi,
   signUpApi,
   googleLoginApi,
-  addUserApi
-} from "../api/notebooks";
-import { auth } from "../services/FirebaseService";
+  addUserApi,
+  uploadImageInFirebase,
+  updateUser
+} from "../api/api";
+
+import { auth, storage } from "../services/FirebaseService";
 import { findIndex } from "lodash";
 
 export const fetchNotebooks = userId => dispatch => {
@@ -116,7 +119,6 @@ export const fetchNotes = (userId, notebookId) => dispatch => {
 
 export const addNote = note => (dispatch, getState) => {
   return addNoteApi(note).then(newNote => {
-    console.log(newNote, typeof newNote);
     dispatch({
       type: "SET_NOTES",
       payload: getState().notes.concat([
@@ -215,9 +217,9 @@ export const signOut = () => () => {
   auth.signOut();
 };
 
-export const getUsername = userId => dispatch => {
+export const getUserData = userId => dispatch => {
   return getUsernameApi(userId).then(doc => {
-    const { username, email } = doc[0];
+    const { username, email, id, imageURL } = doc[0];
     dispatch({
       type: "SET_USERNAME",
       payload: username
@@ -226,13 +228,21 @@ export const getUsername = userId => dispatch => {
       type: "SET_EMAIL",
       payload: email
     });
+    dispatch({
+      type: "SET_PROFILE_ID",
+      payload: id
+    });
+    if (imageURL) {
+      dispatch({
+        type: "SET_PROFILE_IMAGE",
+        payload: imageURL
+      });
+    }
   });
 };
 
 export const googleLogin = () => dispatch => {
   return googleLoginApi().then(userDoc => {
-    console.log(userDoc);
-
     const { uid, displayName, email } = userDoc.user;
     getUsernameApi(uid).then(doc => {
       if (doc.length !== 0) {
@@ -252,6 +262,33 @@ export const googleLogin = () => dispatch => {
   });
 };
 
-// export const uploadImage = () => dispatch => {
+export const uploadProfileImage = (profileId, userId, image) => dispatch => {
+  const filePath = "profile_images";
+  uploadImageInFirebase(filePath, userId, image).on(
+    "state_changed",
+    null,
+    null,
+    () => {
+      storage
+        .ref(filePath)
+        .child(image.name)
+        .getDownloadURL()
+        .then(url => {
+          updateUser({ id: profileId, imageURL: url });
+          dispatch({
+            type: "SET_PROFILE_IMAGE",
+            payload: url
+          });
+        });
+    }
+  );
+};
 
-// }
+export const editUsername = userInfo => dispatch => {
+  const { username } = userInfo;
+  updateUser(userInfo);
+  dispatch({
+    type: "SET_USERNAME",
+    payload: username
+  });
+};

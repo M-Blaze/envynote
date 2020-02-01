@@ -1,31 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function useToggle(popupWrapper, checkCase) {
+export default function useToggle(popupWrapper, popupTogglerClass) {
   const [isShown, setIsShown] = useState(false);
-
   function showOptions() {
-    if (checkCase) {
-      console.log("eventlistener added", popupWrapper);
-    }
-
     setIsShown(true);
-    document.body.addEventListener("click", closePopupConditionally);
+    document.body.addEventListener("click", closePopupConditionally, false);
   }
 
   function hideOptions() {
-    if (checkCase) {
-      console.log("event listener removed", popupWrapper);
-    }
-
     setIsShown(false);
-    document.body.removeEventListener("click", closePopupConditionally);
+    document.body.removeEventListener("click", closePopupConditionally, false);
   }
 
   function toggleOptions(stateParam) {
-    if (checkCase) {
-      console.log("toggle", popupWrapper);
-    }
-
     if (isShown || stateParam === "hide") {
       hideOptions();
       return;
@@ -39,16 +26,17 @@ export default function useToggle(popupWrapper, checkCase) {
   function closePopupConditionally(e) {
     const target = e.target;
     const popupContainer = document.getElementById(popupWrapper);
-    if (checkCase) {
-      console.log("conditional check", popupWrapper);
-      console.log(popupContainer);
-    }
-
-    if (popupContainer.contains(target)) {
+    if (!popupContainer.contains(target)) {
+      hideOptions();
       return;
     }
-    hideOptions();
   }
+  useEffect(() => {
+    return function cleanUp() {
+      document.body.click();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return [isShown, toggleOptions, closePopupConditionally];
 }

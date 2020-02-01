@@ -13,6 +13,12 @@ const reducer = (state, action) => {
         username: payload
       };
 
+    case "SET_PROFILE_ID":
+      return {
+        ...state,
+        profileId: payload
+      };
+
     case "SET_NOTEBOOKS":
       return { ...state, notebooks: payload };
 
@@ -38,6 +44,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         email: payload
+      };
+
+    case "SET_PROFILE_IMAGE":
+      return {
+        ...state,
+        profileImage: payload
       };
 
     default:

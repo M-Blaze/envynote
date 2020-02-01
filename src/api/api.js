@@ -5,7 +5,8 @@ import {
   deleteDocument,
   getDocuments,
   auth,
-  provider
+  provider,
+  storage
 } from "../services/FirebaseService";
 
 export function fetchDefaultNotebook() {
@@ -65,4 +66,18 @@ export function addUserApi(user) {
 
 export function googleLoginApi() {
   return auth.signInWithPopup(provider);
+}
+
+export function uploadImageInFirebase(filePath, userId, image) {
+  const { name } = image;
+  const metaData = {
+    customMetadata: {
+      userId
+    }
+  };
+  return storage.ref(`${filePath}/${name}`).put(image, metaData);
+}
+
+export function updateUser(user) {
+  return updateDocument("User", user.id, user);
 }

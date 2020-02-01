@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { signUp, googleLogin } from "../../store/action";
+import { signUp } from "../../store/action";
 import ErrorTextBlock from "../../components/ErrorTextBlock";
 
 function SignUpForm({ signUp, googleLogin }) {
@@ -54,6 +54,8 @@ function SignUpForm({ signUp, googleLogin }) {
       .filter(([key, value]) => {
         const isEmpty = value.trim().length === 0;
         if (key === "email") {
+          console.log(!emailRegEx.test(value));
+
           return !emailRegEx.test(value);
         } else if (key === "rePassword") {
           return !(input["password"] === value) || isEmpty;
@@ -64,6 +66,8 @@ function SignUpForm({ signUp, googleLogin }) {
       })
       .reduce((obj, [key, value]) => {
         if (value === "") {
+          console.log("empty");
+
           obj[key] = "empty";
         } else {
           obj[key] = "invalid";
@@ -88,23 +92,16 @@ function SignUpForm({ signUp, googleLogin }) {
 
   return (
     <div className="log-form-wrapper">
-      <div className="form-container log-in-container">
+      <div className="form-container signup-container">
         <form
           className="signup-form"
           autoComplete="off"
           onSubmit={submitHandler}
           action="#"
         >
-          <h1>SignUp</h1>
-          <span>You can use your social account to signup.</span>
-          <ul className="social-icons">
-            <li>
-              <i className="icon-facebook"></i>
-            </li>
-            <li onClick={googleLogin}>
-              <i className="icon-google"></i>
-            </li>
-          </ul>
+          <div className="header-block">
+            <h1>Signup</h1>
+          </div>
           <div
             className={`input-group ${
               error.username ? `input-error ${errorType(error.username)}` : ""
@@ -191,4 +188,4 @@ function SignUpForm({ signUp, googleLogin }) {
   );
 }
 
-export default connect(null, { signUp, googleLogin })(SignUpForm);
+export default connect(null, { signUp })(SignUpForm);

@@ -5,8 +5,10 @@ const state = {
   notes: [],
   activeNote: {},
   user: "",
+  profileId: "",
   username: "",
-  email: ""
+  email: "",
+  profileImage: ""
 };
 
 export default state;

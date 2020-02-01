@@ -2,13 +2,27 @@ import React from "react";
 import { connect } from "react-redux";
 import { signOut } from "../../../../store/action";
 
-function ProfileOptions({ display, signOut, username, email, toggleEditMenu }) {
+function ProfileOptions({
+  display,
+  signOut,
+  username,
+  email,
+  toggleEditMenu,
+  profileImage
+}) {
+  function signOutHandler() {
+    signOut();
+  }
   return (
     <div className={`profile-options ${display ? "show" : ""}`}>
       <ul className="profile-list">
         <li>
-          <div className="image-block" id="profile-edit-block">
-            {username.charAt(0)}
+          <div
+            className="image-block"
+            style={{ backgroundImage: `url(${profileImage})` }}
+            id="profile-edit-block"
+          >
+            {profileImage === "" && username.charAt(0)}
             <div onClick={toggleEditMenu} className="edit-button">
               Edit
             </div>
@@ -23,7 +37,7 @@ function ProfileOptions({ display, signOut, username, email, toggleEditMenu }) {
           </div>
         </li>
         <li>
-          <button onClick={signOut}>Sign out</button>
+          <button onClick={signOutHandler}>Sign out</button>
         </li>
       </ul>
     </div>
@@ -31,10 +45,11 @@ function ProfileOptions({ display, signOut, username, email, toggleEditMenu }) {
 }
 
 const mapStateToProps = state => {
-  const { username, email } = state;
+  const { username, email, profileImage } = state;
   return {
     username,
-    email
+    email,
+    profileImage
   };
 };
 

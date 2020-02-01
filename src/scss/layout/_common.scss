@@ -1182,7 +1182,11 @@
     color: #333;
     font-size: 14px;
     text-decoration: none;
-    margin: 15px 0;
+    margin: 15px 0 20px;
+
+    @include media(">=desktop") {
+      margin: 15px 0;
+    }
   }
 
   button {
@@ -1192,11 +1196,16 @@
     color: #ffffff;
     font-size: 12px;
     font-weight: bold;
-    padding: 12px 45px;
+    padding: 10px 30px;
     letter-spacing: 1px;
     text-transform: uppercase;
     transition: background-color 0.2s ease-in, color 0.2s ease-in;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+
+    @include media(">=tablet") {
+      padding: 12px 45px;
+      margin-bottom: 20px;
+    }
 
     &:hover {
       background: transparent;
@@ -1211,22 +1220,33 @@
 
   form {
     background-color: #ffffff;
-    // background: linear-gradient(to right, #ff4b2b, #ff416c);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 50px 50px;
+    padding: 25px 20px;
     min-height: 100%;
     text-align: center;
+
+    @include media(">=widescreen") {
+      padding: 50px;
+    }
   }
 
   input {
     background-color: #eee;
     border: none;
-    padding: 12px 15px;
+    padding: 7px;
     margin: 8px 0;
     width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+
+    @include media(">=tablet") {
+      padding: 12px 15px;
+    }
   }
 
   .input-group {
@@ -1250,25 +1270,44 @@
     min-height: 100%;
   }
 
-  .log-in-container {
+  .log-in-container,
+  .signup-container {
     left: 50%;
     transform: translateX(-50%);
+    background: linear-gradient(to right, #ff4b2b, #ff416c);
+
     width: 100%;
     z-index: 2;
     @extend %d-flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to right, #ff4b2b, #ff416c);
-    padding: 50px 0;
+    padding: 30px 0;
+
+    @include media(">=desktop") {
+      padding: 50px 0;
+    }
 
     .text-block {
-      font-size: 0.8rem;
+      font-size: 1rem;
       line-height: 1;
+
+      @include media(">=widescreen") {
+        font-size: 1.3rem;
+      }
 
       a {
         font-size: 1rem;
         color: #ff4b2b;
         transition: color 0.2s linear;
+        margin: 0;
+
+        @include media(">=tablet") {
+          font-size: 1.2rem;
+        }
+
+        @include media(">=widescreen") {
+          font-size: 1.5rem;
+        }
 
         &:hover {
           color: #734dba;
@@ -1280,7 +1319,7 @@
 
 .input-error {
   input {
-    outline: 1px solid #ff4b2b !important;
+    border: 1px solid #ff4b2b !important;
     color: #ff4b2b !important;
 
     &::placeholder {
@@ -1301,15 +1340,31 @@
   }
 
   &-wrap {
-    font-size: 0.8rem;
+    font-size: 1rem;
     line-height: 1;
     color: #ff4b2b;
     text-align: left;
     position: absolute;
-    bottom: -10px;
+    bottom: -5px;
     left: 5px;
     opacity: 0;
     visibility: hidden;
+
+    @include media(">=tablet") {
+      bottom: -9px;
+    }
+
+    @include media(">=desktop") {
+      bottom: -8px;
+    }
+
+    @include media(">=widescreen") {
+      bottom: -9px;
+    }
+
+    @include media(">=widescreen") {
+      font-size: 1.2rem;
+    }
   }
 }
 
@@ -1346,20 +1401,46 @@
     font-size: 20px;
 
     &:hover {
-      color: red;
+      color: #ff4b2b;
       cursor: pointer;
+    }
+  }
+}
+
+.signin-form {
+  .social-icons {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-block {
+    margin-bottom: 20px;
+  }
+
+  a {
+    transition: color 0.2s linear;
+    &:hover {
+      color: #ff4b2b;
     }
   }
 }
 
 .signup-form,
 .signin-form {
-  max-width: 40%;
+  max-width: 500px;
   width: 100%;
+  margin: 0 15px;
 
   .input-group {
     position: relative;
-    margin-bottom: 6px;
+
+    @include media(">=tablet") {
+      margin-bottom: 5px;
+    }
+
+    @include media(">=desktop") {
+      margin-bottom: 6px;
+    }
 
     &.invalid-error {
       .invalid-error-text {
@@ -1376,6 +1457,12 @@
   }
 
   .btn-group {
-    padding-top: 10px;
+    padding-top: 25px;
+  }
+}
+
+.signup-form {
+  .header-block {
+    margin-bottom: 25px;
   }
 }

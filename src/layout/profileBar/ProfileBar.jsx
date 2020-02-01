@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Logo from "./components/logo";
 import { connect } from "react-redux";
 import ProfileOptions from "./components/profileOptions";
 import useToggle from "../../hooks/useToggle";
 import EditProfileMenu from "../profileBar/components/editProfileMenu";
 
-function ProfileBar({ profileAlphabet }) {
-  const [isOptionsVisible, toggleOptions, closePopupConditionally] = useToggle(
-    "profile-content"
-  );
+function ProfileBar({ profileAlphabet, profileImage }) {
+  const [isOptionsVisible, toggleOptions] = useToggle("profile-content");
+
   const [isEditMenuVisible, setIsEditMenuVisible] = useState(false);
 
   function toggleEditMenu() {
@@ -19,24 +18,23 @@ function ProfileBar({ profileAlphabet }) {
     setIsEditMenuVisible(true);
   }
 
-  useEffect(() => {
-    return function cleanUp() {
-      document.body.removeEventListener("click", closePopupConditionally);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return profileAlphabet === "" ? null : (
+  return (
     <div className="profile-bar">
-      <Logo />
+      <div>
+        <Logo />
+      </div>
       <div id="profile-content">
         <div id="profile-avatar" className="profile-avatar">
           <ProfileOptions
             display={isOptionsVisible}
             toggleEditMenu={toggleEditMenu}
           />
-          <div onClick={toggleOptions} className="profile-button">
-            {profileAlphabet}
+          <div
+            onClick={toggleOptions}
+            style={{ backgroundImage: `url(${profileImage})` }}
+            className="profile-button"
+          >
+            {profileImage === "" && profileAlphabet}
           </div>
         </div>
         {isEditMenuVisible && (
@@ -48,8 +46,10 @@ function ProfileBar({ profileAlphabet }) {
 }
 
 const mapStateToProps = state => {
+  const { username, profileImage } = state;
   return {
-    profileAlphabet: state.username.charAt(0)
+    profileAlphabet: username.charAt(0),
+    profileImage
   };
 };
 
