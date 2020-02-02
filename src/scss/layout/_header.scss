@@ -44,7 +44,7 @@
 
   &-button {
     @extend %circle;
-    background: #00b894;
+    background: $green;
     color: #fff;
     @extend %d-flex;
     justify-content: center;
@@ -192,7 +192,7 @@
       align-items: center;
       justify-content: center;
       margin: 0 auto;
-      background: #00b894;
+      background: $green;
       font-size: 2rem;
       text-transform: uppercase;
       font-weight: 700;
@@ -206,7 +206,7 @@
 
       &:hover {
         cursor: pointer;
-        color: #00b894;
+        color: $green;
 
         .edit-button {
           opacity: 1;
@@ -278,8 +278,15 @@
     width: 450px;
   }
 
-  input[type="text"] {
+  input:not([type="file"]) {
     padding: 5px 10px;
+    flex: 1;
+    margin-left: 5px;
+    width: auto;
+
+    @include media(">=tablet") {
+      margin-left: 10px;
+    }
   }
 
   .close-button {
@@ -303,41 +310,77 @@
 
       &:hover {
         cursor: pointer;
-        color: #00b894;
+        color: $green;
       }
+    }
+  }
+
+  .password-block {
+    .block-content {
+      height: 0;
+      transition: height 0.2s linear;
+      overflow: hidden;
+    }
+
+    &.block-active {
+      .block-content {
+        height: 80px;
+      }
+
+      .block-header {
+        .icon-holder {
+          transform: rotateZ(180deg);
+        }
+      }
+    }
+
+    .input-group {
+      padding: 0 10px;
+      margin-bottom: 10px;
+
+      @include media(">=desktop") {
+        // padding: 15px 20px 0;
+        padding: 0 20px;
+        margin-bottom: 15px;
+      }
+    }
+  }
+
+  .block-header {
+    padding: 10px 0;
+    position: relative;
+    margin: 0 10px 10px;
+
+    @include media(">=desktop") {
+      margin: 0 20px 10px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .icon-holder {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      transform: rotateZ(0);
+      transition: transform 0.2s linear;
     }
   }
 
   .input-group {
     padding: 20px;
     font-size: 1.3rem;
+    @extend %d-flex;
+    align-items: center;
+    padding: 15px 10px;
+
+    @include media(">=desktop") {
+      padding: 25px 20px 10px;
+    }
 
     @include media(">=tablet") {
       font-size: 1.4rem;
-    }
-
-    &:first-child {
-      border-bottom: 1px solid #ccc;
-    }
-
-    &.username-wrap {
-      @extend %d-flex;
-      align-items: center;
-      padding: 15px 10px;
-
-      @include media(">=desktop") {
-        padding: 25px 20px 10px;
-      }
-
-      input {
-        margin-left: 5px;
-        width: auto;
-        flex: 1;
-
-        @include media(">=tablet") {
-          margin-left: 10px;
-        }
-      }
     }
   }
 
@@ -349,8 +392,13 @@
   .button-group {
     text-align: center;
     padding: 0 20px 30px;
+
     @include media(">=desktop") {
-      padding: 10px 20px 40px;
+      padding: 20px 20px 40px;
+    }
+
+    .button {
+      margin: 0 5px 10px;
     }
   }
 
@@ -358,13 +406,12 @@
     position: relative;
     padding-bottom: 20px;
     @include size(100px);
-    @extend %d-flex;
     @extend %circle;
     justify-content: center;
     align-items: center;
     position: relative;
     margin: 0 auto;
-    background: #00b894;
+    background: $green;
     color: #ffffff;
     font-size: 2.5rem;
     line-height: 1;
@@ -376,7 +423,7 @@
     }
 
     &:hover {
-      color: #00b894;
+      color: $green;
       cursor: grab;
 
       .icon-holder {
@@ -417,7 +464,7 @@
 
       &:hover {
         cursor: grab;
-        color: #00b894;
+        color: $green;
       }
     }
 
@@ -440,8 +487,41 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.2s linear, visibility 0.2s linear, color 0.2s linear;
-      color: #00b894;
+      color: $green;
       z-index: 5;
     }
+  }
+}
+
+.password-update-message {
+  position: relative;
+  margin: 0 10px 10px;
+  padding-top: 10px;
+  font-size: 1.5rem;
+  line-height: 1;
+
+  @include media(">=desktop") {
+    margin: 0 20px 10px;
+  }
+
+  &.success {
+    .success-message {
+      color: $green;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &.failure {
+    .failure-message {
+      color: $red;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .success-message,
+  .failure-message {
+    opacity: 0;
+    visibility: hidden;
   }
 }

@@ -53,6 +53,10 @@ input {
       flex-direction: row;
     }
   }
+
+  > .spinner {
+    position: fixed;
+  }
 }
 
 .custom-button {
@@ -72,7 +76,7 @@ input {
   @include media(">=tablet") {
     min-width: 100px;
     font-size: 1.4rem;
-    padding: 10px 25px 10px 15px;
+    padding: 10px 30px 10px 15px;
   }
 
   &:hover {
@@ -105,4 +109,19 @@ input {
     right: 8px;
     font-size: 2rem;
   }
+}
+
+.spinner {
+  @extend %d-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.bg-red {
+  background-color: $red;
 }

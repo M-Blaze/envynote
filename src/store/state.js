@@ -8,7 +8,9 @@ const state = {
   profileId: "",
   username: "",
   email: "",
-  profileImage: ""
+  profileImage: "",
+  provider: "",
+  emailVerified: false
 };
 
 export default state;

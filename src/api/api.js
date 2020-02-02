@@ -7,7 +7,8 @@ import {
   auth,
   googleProvider,
   facebookProvider,
-  storage
+  storage,
+  emailAuthProvider
 } from "../services/FirebaseService";
 
 export function fetchDefaultNotebook() {
@@ -90,4 +91,17 @@ export function updateUser(user) {
 
 export function resetPasswordInFirebase(email) {
   return auth.sendPasswordResetEmail(email);
+}
+
+export function updatePasswordInFirebase(currentPassword, newPassword) {
+  const user = auth.currentUser;
+  const credential = emailAuthProvider.credential(user.email, currentPassword);
+  return user.reauthenticateWithCredential(credential).then(() => {
+    user.updatePassword(newPassword);
+  });
+}
+
+export function sendVerificationMailFromFirebase() {
+  const user = auth.currentUser;
+  return user.sendEmailVerification();
 }

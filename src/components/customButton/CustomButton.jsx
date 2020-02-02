@@ -6,6 +6,7 @@ export default function CustomButton(props) {
       type={props.type}
       style={{ backgroundColor: `${props.bgColor}` }}
       className="custom-button"
+      onClick={props.click}
     >
       {props.text}
       {props.children}

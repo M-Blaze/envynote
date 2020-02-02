@@ -22,11 +22,9 @@ class MainLayout extends Component {
     return this.state.isFetchingNotebooks ? (
       <Spinner />
     ) : (
-      <div id="wrapper">
-        <div className="container d-flex">
-          <ProfileBar />
-          {this.props.children}
-        </div>
+      <div className="container d-flex">
+        <ProfileBar />
+        {this.props.children}
       </div>
     );
   }

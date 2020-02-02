@@ -16,7 +16,9 @@ import {
   addUserApi,
   uploadImageInFirebase,
   updateUser,
-  resetPasswordInFirebase
+  resetPasswordInFirebase,
+  updatePasswordInFirebase,
+  sendVerificationMailFromFirebase
 } from "../api/api";
 
 import { auth, storage } from "../services/FirebaseService";
@@ -185,18 +187,30 @@ export const deleteNote = id => (dispatch, getState) => {
 
 export const authStateChange = () => dispatch => {
   auth.onAuthStateChanged(firebaseUser => {
+    console.log(firebaseUser);
     if (firebaseUser) {
-      const uId = firebaseUser.uid;
+      const uid = firebaseUser.uid;
+      const provider = firebaseUser.providerData[0].providerId;
       dispatch({
         type: "SET_USER",
-        payload: uId
+        payload: uid
       });
-    } else {
       dispatch({
-        type: "SET_USER",
-        payload: "loggedOut"
+        type: "SET_PROVIDER",
+        payload: provider
       });
+      if (provider === "password" && firebaseUser.emailVerified) {
+        dispatch({
+          type: "SET_EMAIL_VERIFIED",
+          payload: true
+        });
+      }
+      return;
     }
+    dispatch({
+      type: "SET_USER",
+      payload: "loggedOut"
+    });
   });
 };
 
@@ -360,4 +374,14 @@ export const editUsername = userInfo => dispatch => {
 
 export const resetPassword = email => () => {
   return resetPasswordInFirebase(email);
+};
+
+export const updatePassword = (currentPassword, newPassword) => () => {
+  return updatePasswordInFirebase(currentPassword, newPassword);
+};
+
+export const sendVerificationMail = () => () => {
+  console.log("sadf");
+
+  return sendVerificationMailFromFirebase();
 };

@@ -18,6 +18,7 @@ export const db = app.firestore();
 export const auth = app.auth();
 export const facebookProvider = new firebase.auth.FacebookAuthProvider();
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
+export const emailAuthProvider = firebase.auth.EmailAuthProvider;
 export const storage = firebase.storage();
 function getTimeStamp() {
   return firebase.firestore.FieldValue.serverTimestamp();

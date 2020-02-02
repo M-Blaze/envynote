@@ -4,6 +4,7 @@ import { resetPassword } from "../../store/action";
 import CustomButton from "../../components/button";
 import SuccessModal from "./components/successModal";
 import FailureModal from "./components/failureModal";
+import { Link } from "react-router-dom";
 
 function PasswordResetForm({ resetPassword }) {
   const [email, setEmail] = useState("");
@@ -96,11 +97,15 @@ function PasswordResetForm({ resetPassword }) {
             <i className="icon-arrow-right"></i>
           </CustomButton>
         </div>
+        <div className="info-message-block">
+          <div className="text-wrap">
+            <strong>OR</strong>
+            <Link to="/signin">Go to the Login page.</Link>
+          </div>
+          {state.success && <SuccessModal />}
+          {state.failure && <FailureModal stateHandler={stateHandler} />}
+        </div>
       </form>
-      <div className="info-message-block">
-        {state.success && <SuccessModal />}
-        {state.failure && <FailureModal stateHandler={stateHandler} />}
-      </div>
     </div>
   );
 }

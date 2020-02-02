@@ -23,6 +23,9 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
         [name]: false
       });
     }
+    if (displayErrorMessage) {
+      setDisplayErrorMessage(false);
+    }
   }
 
   function inputBlurHandler(e) {

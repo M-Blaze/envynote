@@ -8,7 +8,7 @@ import SignUpForm from "../views/signUpForm";
 import SignInForm from "../views/signInForm";
 import PasswordResetForm from "../views/passwordResetForm";
 import { authStateChange, getUserData } from "../store/action";
-import Spinner from "../components/Spinner";
+import VerifyEmail from "../views/verifyEmail";
 
 class Router extends React.Component {
   componentDidMount() {
@@ -23,40 +23,47 @@ class Router extends React.Component {
   }
 
   render() {
+    const { user, emailVerified } = this.props;
     return (
-      <BrowserRouter>
-        {this.props.user === "loggedOut" ? (
-          <React.Fragment>
-            <Switch>
-              <Route path="/signin" component={SignInForm} />
-              <Route path="/signup" component={SignUpForm} />
-              <Route path="/forgot-password" component={PasswordResetForm} />
-              <Route render={() => <Redirect to="/signin" />} />
-            </Switch>
-          </React.Fragment>
-        ) : this.props.username !== "" ? (
-          <React.Fragment>
-            <MainLayout>
+      <div id="wrapper">
+        <BrowserRouter>
+          {user === "loggedOut" ? (
+            <React.Fragment>
               <Switch>
-                <Route path="/notebook/:id/:slug" component={Notes} />
-                <Route path="/notebooks/:id" component={Notebooks} />
-                <Route render={() => <Redirect to="/notebooks/general" />} />
+                <Route path="/signin" component={SignInForm} />
+                <Route path="/signup" component={SignUpForm} />
+                <Route path="/forgot-password" component={PasswordResetForm} />
+                <Route render={() => <Redirect to="/signin" />} />
               </Switch>
-            </MainLayout>
-          </React.Fragment>
-        ) : (
-          <Spinner />
-        )}
-      </BrowserRouter>
+            </React.Fragment>
+          ) : emailVerified ? (
+            <React.Fragment>
+              <MainLayout>
+                <Switch>
+                  <Route path="/notebook/:id/:slug" component={Notes} />
+                  <Route path="/notebooks/:id" component={Notebooks} />
+                  <Route render={() => <Redirect to="/notebooks/general" />} />
+                </Switch>
+              </MainLayout>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Redirect to="/verify-email" />
+              <Route path="/verify-email" component={VerifyEmail} />
+            </React.Fragment>
+          )}
+        </BrowserRouter>
+      </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  const { user, username } = state;
+  const { user, username, emailVerified } = state;
   return {
     user,
-    username
+    username,
+    emailVerified
   };
 };
 

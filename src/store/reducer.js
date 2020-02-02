@@ -19,6 +19,12 @@ const reducer = (state, action) => {
         profileId: payload
       };
 
+    case "SET_PROVIDER":
+      return {
+        ...state,
+        provider: payload
+      };
+
     case "SET_NOTEBOOKS":
       return { ...state, notebooks: payload };
 

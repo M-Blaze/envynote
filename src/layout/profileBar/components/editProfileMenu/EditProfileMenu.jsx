@@ -3,8 +3,12 @@ import { connect } from "react-redux";
 import CustomButton from "../../../../components/button";
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
-import { uploadProfileImage, editUsername } from "../../../../store/action";
 import CloseIcon from "@material-ui/icons/Close";
+import {
+  uploadProfileImage,
+  editUsername,
+  updatePassword
+} from "../../../../store/action";
 
 const CustomTooltip = withStyles(theme => ({
   tooltip: {
@@ -20,14 +24,28 @@ function EditProfileMenu({
   uploadProfileImage,
   editUsername,
   profileId,
-  userId
+  userId,
+  provider,
+  updatePassword,
+  email
 }) {
   const usernameRef = useRef(null);
+  const [isPasswordMenuVisibile, setIsPasswordMenuVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [imageURL, setImageURL] = useState("");
+  const [password, setPassword] = useState({
+    currentPassword: "",
+    newPassword: ""
+  });
+  const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const usernameRegEx = /^[a-z]+[\w_-]+/i;
+  const passwordRegEx = /^[\w_\-#@+*/]+/;
+
+  function togglePasswordMenu() {
+    setIsPasswordMenuVisible(!isPasswordMenuVisibile);
+  }
 
   useEffect(() => {
     usernameRef.current.focus();
@@ -69,18 +87,40 @@ function EditProfileMenu({
       reader.readAsDataURL(image);
       return;
     }
-    setUsername(value);
+    if (name === "username") {
+      setUsername(value);
+      return;
+    }
+    if (name === "currentPassword") {
+      setPassword({ ...password, [name]: value });
+    }
+    if (name === "newPassword") {
+      setPassword({ ...password, [name]: value });
+      return;
+    }
   }
 
   function submitHandler(e) {
     e.preventDefault();
+    const { currentPassword, newPassword } = password;
     if (profileImage !== "") {
       uploadProfileImage(profileId, userId, profileImage);
     }
-    if (username !== usernameState && usernameRegEx.test(username.trim())) {
+    if (username !== usernameState && usernameRegEx.test(username)) {
       editUsername({ username: username.trim(), id: profileId });
     }
-    toggleEditMenu();
+    if (
+      passwordRegEx.test(newPassword) &&
+      passwordRegEx.test(currentPassword)
+    ) {
+      updatePassword(currentPassword, newPassword)
+        .then(() => {
+          setIsPasswordUpdated("success");
+        })
+        .catch(e => {
+          setIsPasswordUpdated("failure");
+        });
+    }
   }
 
   return (
@@ -123,15 +163,7 @@ function EditProfileMenu({
           </div>
         </CustomTooltip>
         <div className="input-group username-wrap">
-          <label
-            style={{
-              backgroundImage:
-                "https://firebasestorage.googleapis.com/v0/b/envynote-91bba.appspot.com/o/profile_images%2Fenvynote.png?alt=media&token=30bf9e11-7af8-4810-b160-56b66faf648d"
-            }}
-            htmlFor="profile-username"
-          >
-            Username:
-          </label>
+          <label htmlFor="profile-username">Username</label>
           <input
             onChange={inputChangeHandler}
             id="profile-username"
@@ -143,10 +175,61 @@ function EditProfileMenu({
             ref={usernameRef}
           />
         </div>
+        {provider === "password" ? (
+          <div
+            className={`password-block ${
+              isPasswordMenuVisibile ? "block-active" : ""
+            }`}
+          >
+            <div onClick={togglePasswordMenu} className="block-header">
+              <strong>Change your Password</strong>
+              <div className="icon-holder">
+                <i className="icon-cheveron-down"></i>
+              </div>
+            </div>
+            <div className="block-content">
+              <div className="input-group">
+                <label htmlFor="currentPassword">Current</label>
+                <input
+                  id="currentPassword"
+                  type="password"
+                  name="currentPassword"
+                  placeholder="Enter your current password."
+                  onChange={inputChangeHandler}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="newPassword">New</label>
+                <input
+                  id="newPassword"
+                  type="password"
+                  name="newPassword"
+                  placeholder="Enter your new password."
+                  onChange={inputChangeHandler}
+                />
+              </div>
+            </div>
+            {isPasswordUpdated ? (
+              <div className={`password-update-message ${isPasswordUpdated}`}>
+                {isPasswordUpdated === "success" ? (
+                  <div className="success-message">
+                    Password changed successfully!!!
+                  </div>
+                ) : (
+                  <div className="failure-message">
+                    The Password you provided is Invalid!!!
+                  </div>
+                )}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
         <div className="button-group">
-          <CustomButton type="submit" text="save">
-            <i className="icon-arrow-right"></i>
-          </CustomButton>
+          <div className="button">
+            <CustomButton type="submit" text="save">
+              <i className="icon-arrow-right"></i>
+            </CustomButton>
+          </div>
         </div>
       </form>
     </div>
@@ -154,15 +237,19 @@ function EditProfileMenu({
 }
 
 const mapStateToProps = state => {
-  const { username, profileImage, profileId, user } = state;
+  const { username, profileImage, profileId, user, provider, email } = state;
   return {
     usernameState: username,
     profileImageState: profileImage,
     profileId,
-    userId: user
+    userId: user,
+    provider,
+    email
   };
 };
 
-export default connect(mapStateToProps, { uploadProfileImage, editUsername })(
-  EditProfileMenu
-);
+export default connect(mapStateToProps, {
+  uploadProfileImage,
+  editUsername,
+  updatePassword
+})(EditProfileMenu);
