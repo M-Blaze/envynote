@@ -63,7 +63,6 @@ export function getUsernameApi(userId) {
 }
 
 export function addUserApi(user) {
-  console.log("user added");
   return addDocument("User", user);
 }
 

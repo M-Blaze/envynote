@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { resetPassword } from "../../store/action";
-import CustomButton from "../../components/button";
+import CustomButton from "../../components/customButton";
 import SuccessModal from "./components/successModal";
 import FailureModal from "./components/failureModal";
 import { Link } from "react-router-dom";

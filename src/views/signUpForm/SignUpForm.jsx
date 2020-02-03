@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { signUp } from "../../store/action";
 import ErrorTextBlock from "../../components/ErrorTextBlock";
 
-function SignUpForm({ signUp, googleLogin }) {
+function SignUpForm({ signUp }) {
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -54,8 +54,6 @@ function SignUpForm({ signUp, googleLogin }) {
       .filter(([key, value]) => {
         const isEmpty = value.trim().length === 0;
         if (key === "email") {
-          console.log(!emailRegEx.test(value));
-
           return !emailRegEx.test(value);
         } else if (key === "rePassword") {
           return !(input["password"] === value) || isEmpty;
@@ -66,8 +64,6 @@ function SignUpForm({ signUp, googleLogin }) {
       })
       .reduce((obj, [key, value]) => {
         if (value === "") {
-          console.log("empty");
-
           obj[key] = "empty";
         } else {
           obj[key] = "invalid";
@@ -79,7 +75,17 @@ function SignUpForm({ signUp, googleLogin }) {
       setError(newErrorObj);
     } else {
       const { username, email, password } = input;
-      signUp(username, email, password);
+      signUp(username, email, password)
+        .then(() => {
+          console.log("then");
+        })
+        .catch(error => {
+          if (error === "auth/email-already-in-use") {
+            console.log("already");
+
+            setError({ email: "exist-error" });
+          }
+        });
     }
   }
 
@@ -136,6 +142,10 @@ function SignUpForm({ signUp, googleLogin }) {
             <ErrorTextBlock
               errorClass="invalid-error-text"
               errorText="Enter a valid email address."
+            />
+            <ErrorTextBlock
+              errorClass="exist-error-text"
+              errorText="A user with this email already exist."
             />
           </div>
           <div

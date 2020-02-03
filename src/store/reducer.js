@@ -51,6 +51,11 @@ const reducer = (state, action) => {
         ...state,
         email: payload
       };
+    case "SET_EMAIL_VERIFIED":
+      return {
+        ...state,
+        emailVerified: payload
+      };
 
     case "SET_PROFILE_IMAGE":
       return {

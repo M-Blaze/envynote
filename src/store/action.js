@@ -187,7 +187,6 @@ export const deleteNote = id => (dispatch, getState) => {
 
 export const authStateChange = () => dispatch => {
   auth.onAuthStateChanged(firebaseUser => {
-    console.log(firebaseUser);
     if (firebaseUser) {
       const uid = firebaseUser.uid;
       const provider = firebaseUser.providerData[0].providerId;
@@ -199,7 +198,12 @@ export const authStateChange = () => dispatch => {
         type: "SET_PROVIDER",
         payload: provider
       });
-      if (provider === "password" && firebaseUser.emailVerified) {
+      console.log(provider);
+
+      if (
+        (provider === "password" && firebaseUser.emailVerified) ||
+        provider !== "password"
+      ) {
         dispatch({
           type: "SET_EMAIL_VERIFIED",
           payload: true
@@ -381,7 +385,5 @@ export const updatePassword = (currentPassword, newPassword) => () => {
 };
 
 export const sendVerificationMail = () => () => {
-  console.log("sadf");
-
   return sendVerificationMailFromFirebase();
 };

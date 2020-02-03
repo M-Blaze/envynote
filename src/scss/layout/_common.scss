@@ -412,6 +412,9 @@
     font-size: 1.5rem;
     flex: 1;
 
+    @include media(">=tablet") {
+      font-size: 1.8rem;
+    }
     @include media(">=desktop") {
       font-size: 2rem;
     }
@@ -1643,8 +1646,26 @@
   }
 
   .header-block {
-    padding: 20px;
+    padding: 20px 50px 20px 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+
+    .icon-holder {
+      position: absolute;
+      top: 22px;
+      right: 20px;
+
+      svg {
+        font-size: 2.2rem;
+        line-height: 1;
+        transition: color 0.2s linear;
+
+        &:hover {
+          cursor: pointer;
+          color: $red;
+        }
+      }
+    }
 
     h2 {
       margin-bottom: 0;
@@ -1657,8 +1678,12 @@
     margin-bottom: 20px;
 
     h2 {
-      font-size: 2.1rem;
+      font-size: 1.8rem;
       margin-bottom: 5px;
+
+      @include media(">=tablet") {
+        font-size: 2.1rem;
+      }
     }
   }
 
@@ -1671,8 +1696,12 @@
   }
 
   .details-block {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 1.2;
+
+    @include media(">=tablet") {
+      font-size: 1.5rem;
+    }
   }
 
   .email {
@@ -1680,7 +1709,11 @@
   }
 
   .text-content {
-    padding: 20px;
+    padding: 20px 20px 10px 20px;
+
+    @include media(">=tablet") {
+      padding-bottom: 20px;
+    }
 
     i {
       text-decoration: underline;
@@ -1689,5 +1722,17 @@
 
   .button-holder {
     padding: 20px 20px 30px;
+  }
+}
+
+.verification-block {
+  &-appear {
+    opacity: 0;
+    visibility: hidden;
+  }
+  &-enter-done {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-out;
   }
 }
