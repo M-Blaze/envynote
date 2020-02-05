@@ -19,13 +19,12 @@ function ProfileOptions({
         <li>
           <div
             className="image-block"
+            onClick={toggleEditMenu}
             style={{ backgroundImage: `url(${profileImage})` }}
             id="profile-edit-block"
           >
             {profileImage === "" && username.charAt(0)}
-            <div onClick={toggleEditMenu} className="edit-button">
-              Edit
-            </div>
+            <div className="edit-button">Edit</div>
           </div>
         </li>
         <li>

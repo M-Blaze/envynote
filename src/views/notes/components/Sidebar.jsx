@@ -12,8 +12,12 @@ class Sidebar extends Component {
   };
 
   componentDidMount() {
-    const id = this.props.match.params.id;
-    if (this.props.activeNotebook.id !== id) {
+    const activeNotebook = this.props.activeNotebook;
+    if (
+      Object.keys(activeNotebook).length === 0 &&
+      activeNotebook.constructor === Object
+    ) {
+      const id = this.props.match.params.id;
       this.props.setActiveNotebook(id);
     }
   }
@@ -60,14 +64,13 @@ class Sidebar extends Component {
     this.closeSidebar();
   };
 
-  redirectHandler = () => {
-    this.props.history.push(
-      `/notebook/${this.props.activeNotebook.id}/notes/new`
-    );
+  redirectHandler = activeNotebookId => {
+    this.props.history.push(`/notebooks/${activeNotebookId}/notes/new`);
     this.closeSidebar();
   };
 
   render() {
+    const { id: activeNotebookId, name } = this.props.activeNotebook;
     return (
       <div
         id="note-sidebar"
@@ -84,8 +87,11 @@ class Sidebar extends Component {
               <FontAwesomeIcon icon={faChevronLeft} />
             </Link>
           </div>
-          <h3>{this.props.activeNotebook.name}</h3>
-          <div onClick={this.redirectHandler} className="icon-holder">
+          <h3>{name}</h3>
+          <div
+            onClick={() => this.redirectHandler(activeNotebookId)}
+            className="icon-holder"
+          >
             <AddIcon />
           </div>
         </div>

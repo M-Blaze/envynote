@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
   margin-top: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -47,11 +48,7 @@ input {
   min-width: 320px;
 
   > .container {
-    flex-direction: column;
     height: 100vh;
-    @include media(">=tablet") {
-      flex-direction: row;
-    }
   }
 
   > .spinner {

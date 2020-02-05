@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { setActiveNotebook, addNotebook } from "../../../../store/action";
+import { addNotebook } from "../../../../store/action";
 import NotebookModal from "../NotebookModal";
 import NotebookMenu from "../NotebookMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,7 @@ import { faBook } from "@fortawesome/free-solid-svg-icons";
 import AddIcon from "@material-ui/icons/Add";
 
 class Sidebar extends Component {
+  _mounted = false;
   constructor() {
     super();
     this.state = {
@@ -17,26 +18,27 @@ class Sidebar extends Component {
   }
 
   componentDidMount() {
-    const routeId = this.props.match.params.id;
-    this.props.setActiveNotebook(routeId);
+    this._mounted = true;
   }
 
   componentWillUnmount() {
+    this._mounted = false;
+
     document.body.removeEventListener("click", this.closeSidebarConditionally);
   }
 
   clickHandler = id => {
     if (this.props.activeNotebook.id !== id) {
-      this.props.setActiveNotebook(id);
-      this.props.setIsFetchingNotes(true);
       this.closeSidebar();
     }
   };
 
   setIsSidebarOpen = value => {
-    this.setState({
-      isSidebarOpen: value
-    });
+    if (this._mounted) {
+      this.setState({
+        isSidebarOpen: value
+      });
+    }
   };
 
   openSidebar = () => {
@@ -79,7 +81,7 @@ class Sidebar extends Component {
       title: "Create",
       action: this.props.addNotebook
     };
-    return (
+    return this.props.activeNotebook ? (
       <div
         id="notebook-sidebar"
         className={`notebook-sidebar ${
@@ -129,7 +131,7 @@ class Sidebar extends Component {
           </ul>
         </div>
       </div>
-    );
+    ) : null;
   }
 }
 
@@ -141,6 +143,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  setActiveNotebook,
   addNotebook
 })(Sidebar);

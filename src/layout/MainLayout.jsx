@@ -31,10 +31,9 @@ class MainLayout extends Component {
 }
 
 const mapStateToProps = state => {
-  const { user, notebooks } = state;
+  const { user } = state;
   return {
-    userId: user,
-    notebooks
+    userId: user
   };
 };
 

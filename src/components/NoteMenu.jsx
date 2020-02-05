@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { withRouter } from "react-router-dom";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { deleteNote } from "../store/action";
@@ -22,14 +22,11 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function SimpleMenu({
-  history,
-  deleteNote,
-  noteId,
-  path,
-  horizontal,
-  ...props
-}) {
+function NoteMenu({ deleteNote, horizontal, noteId, ...props }) {
+  const { id: activeNotebook } = useParams();
+  const closeSidebar = props.closeSidebar;
+  const openSidebar = props.openSidebar;
+  const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
@@ -42,14 +39,18 @@ function SimpleMenu({
 
   function redirectHandler() {
     handleClose();
-    history.push(`${path}/edit`);
-    props.closeSidebar();
+    history.push(`/notebooks/${activeNotebook}/notes/${noteId}/edit`);
+    if (closeSidebar) {
+      closeSidebar();
+    }
   }
 
   function deleteHandler(id) {
     handleClose();
     deleteNote(id);
-    props.openSidebar();
+    if (openSidebar) {
+      openSidebar();
+    }
   }
 
   return (
@@ -85,14 +86,8 @@ function SimpleMenu({
   );
 }
 
-SimpleMenu.defaultProps = {
+NoteMenu.defaultProps = {
   horizontal: false
 };
 
-const mapStateToProps = state => {
-  return {
-    activeNote: state.activeNote
-  };
-};
-
-export default withRouter(connect(mapStateToProps, { deleteNote })(SimpleMenu));
+export default connect(null, { deleteNote })(NoteMenu);

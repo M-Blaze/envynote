@@ -75,17 +75,11 @@ function SignUpForm({ signUp }) {
       setError(newErrorObj);
     } else {
       const { username, email, password } = input;
-      signUp(username, email, password)
-        .then(() => {
-          console.log("then");
-        })
-        .catch(error => {
-          if (error === "auth/email-already-in-use") {
-            console.log("already");
-
-            setError({ email: "exist-error" });
-          }
-        });
+      signUp(username, email, password).catch(error => {
+        if (error === "auth/email-already-in-use") {
+          setError({ email: "exist-error" });
+        }
+      });
     }
   }
 

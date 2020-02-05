@@ -26,23 +26,31 @@ import { findIndex } from "lodash";
 
 export const fetchNotebooks = userId => dispatch => {
   let defaultNotebook = [];
-  fetchDefaultNotebook().then(notebook => {
-    defaultNotebook = defaultNotebook.concat(notebook);
-  });
+  fetchDefaultNotebook()
+    .then(notebook => {
+      defaultNotebook = defaultNotebook.concat(notebook);
+    })
+    .catch(e => {
+      console.log(e);
+    });
 
-  return fetchNotebooksApi(userId).then(notebooks => {
-    if (notebooks.length !== 0) {
-      dispatch({
-        type: "SET_NOTEBOOKS",
-        payload: defaultNotebook.concat(notebooks)
-      });
-    } else {
+  return fetchNotebooksApi(userId)
+    .then(notebooks => {
+      if (notebooks.length !== 0) {
+        dispatch({
+          type: "SET_NOTEBOOKS",
+          payload: defaultNotebook.concat(notebooks)
+        });
+        return;
+      }
       dispatch({
         type: "SET_NOTEBOOKS",
         payload: defaultNotebook
       });
-    }
-  });
+    })
+    .catch(e => {
+      console.log(e);
+    });
 };
 
 export const setActiveNotebook = notebookId => (dispatch, getState) => {
@@ -113,12 +121,16 @@ export const deleteNotebook = (userId, notebookId) => (dispatch, getState) => {
 };
 
 export const fetchNotes = (userId, notebookId) => dispatch => {
-  return fetchNotesApi(userId, notebookId).then(notes => {
-    dispatch({
-      type: "SET_NOTES",
-      payload: notes
+  return fetchNotesApi(userId, notebookId)
+    .then(notes => {
+      dispatch({
+        type: "SET_NOTES",
+        payload: notes
+      });
+    })
+    .catch(e => {
+      console.log(e);
     });
-  });
 };
 
 export const addNote = note => (dispatch, getState) => {
@@ -162,27 +174,34 @@ export const editNote = data => (dispatch, getState) => {
 
 export const deleteNote = id => (dispatch, getState) => {
   deleteNoteApi(id);
-  const notes = getState().notes;
-  const activeNoteId = getState().activeNote.id;
+  const { notes, activeNote } = getState();
   const newNotes = notes.filter(note => note.id !== id);
-  if (activeNoteId === id) {
+  dispatch({
+    type: "SET_NOTES",
+    payload: newNotes
+  });
+  if (newNotes.length === 0) {
+    dispatch({
+      type: "SET_ACTIVE_NOTE",
+      payload: {}
+    });
+    return;
+  }
+  if (activeNote.id === id) {
     const targetIndex = findIndex(notes, note => note.id === id);
     if (targetIndex === 0) {
       dispatch({
         type: "SET_ACTIVE_NOTE",
         payload: newNotes[0]
       });
-    } else {
-      dispatch({
-        type: "SET_ACTIVE_NOTE",
-        payload: newNotes[targetIndex - 1]
-      });
+      return;
     }
+    dispatch({
+      type: "SET_ACTIVE_NOTE",
+      payload: newNotes[targetIndex - 1]
+    });
+    return;
   }
-  dispatch({
-    type: "SET_NOTES",
-    payload: newNotes
-  });
 };
 
 export const authStateChange = () => dispatch => {
@@ -198,8 +217,6 @@ export const authStateChange = () => dispatch => {
         type: "SET_PROVIDER",
         payload: provider
       });
-      console.log(provider);
-
       if (
         (provider === "password" && firebaseUser.emailVerified) ||
         provider !== "password"
@@ -225,9 +242,13 @@ export const signIn = (email, password) => () => {
 export const signUp = (username, email, password) => dispatch => {
   return signUpApi(email, password).then(doc => {
     const { uid } = doc.user;
-    addUserApi({ userId: uid, username });
+    addUserApi({ userId: uid, username, email });
     dispatch({
       type: "SET_USER",
+      payload: uid
+    });
+    dispatch({
+      type: "SET_USERNAME",
       payload: username
     });
   });
@@ -296,8 +317,26 @@ export const googleLogin = () => dispatch => {
         username: displayName,
         email,
         imageURL: photoURL
-      }).then(() => {
-        getUsernameApi(uid);
+      }).then(doc => {
+        const { id } = doc;
+        dispatch({
+          type: "SET_USERNAME",
+          payload: displayName
+        });
+        dispatch({
+          type: "SET_EMAIL",
+          payload: email
+        });
+        dispatch({
+          type: "SET_PROFILE_ID",
+          payload: id
+        });
+        if (photoURL) {
+          dispatch({
+            type: "SET_PROFILE_IMAGE",
+            payload: photoURL
+          });
+        }
       });
     });
   });

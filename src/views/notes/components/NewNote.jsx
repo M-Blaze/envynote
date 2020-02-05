@@ -13,16 +13,19 @@ function NewNote(props) {
   function handleSubmit(e) {
     e.preventDefault();
     const title = titleRef.current;
-    const titleValue = title.value;
     const content = contentRef.current;
-    const contentValue = content.value;
-    const notebookId = props.activeNotebook.id;
+    const notebookId = props.match.params.id;
     const userId = props.userId;
-    if (titleValue.trim() === "" || contentValue.trim() === "") {
+    if (title.value.trim() === "" || content.value.trim() === "") {
       return;
     }
     props
-      .addNote({ title: titleValue, content: contentValue, notebookId, userId })
+      .addNote({
+        title: title.value,
+        content: content.value,
+        notebookId,
+        userId
+      })
       .then(() => {
         title.value = "";
         title.focus();
@@ -63,7 +66,6 @@ function NewNote(props) {
 
 const mapStateToProps = state => {
   return {
-    activeNotebook: state.activeNotebook,
     userId: state.user
   };
 };

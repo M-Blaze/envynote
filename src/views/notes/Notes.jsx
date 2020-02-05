@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Sidebar from "./components/Sidebar";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import NoteContent from "./components/NoteContent";
 import NewNote from "./components/NewNote";
 import { fetchNotes } from "../../store/action";
@@ -16,13 +16,24 @@ class Notes extends Component {
   }
 
   componentDidMount() {
-    this.props
-      .fetchNotes(this.props.user, this.props.match.params.id)
-      .then(() => {
-        this.setState({
-          isFetching: false
+    const { user, notes, history } = this.props;
+    if (notes.length === 0) {
+      const { id: notebookId } = this.props.match.params;
+      this.props
+        .fetchNotes(user, notebookId)
+        .then(() => {
+          this.setState({
+            isFetching: false
+          });
+        })
+        .catch(() => {
+          history.replace("/");
         });
-      });
+      return;
+    }
+    this.setState({
+      isFetching: false
+    });
   }
 
   render() {
@@ -32,11 +43,12 @@ class Notes extends Component {
       <React.Fragment>
         <Sidebar />
         <Switch>
-          <Route path={`/notebook/:id/notes/new`} component={NewNote} exact />
+          <Route path={`/notebooks/:id/notes/new`} component={NewNote} exact />
           <Route
-            path={`/notebook/:id/notes/:slug`}
+            path={`/notebooks/:id/notes/:noteId`}
             render={() => <NoteContent />}
           ></Route>
+          <Route render={() => <Redirect to="/" />} />
         </Switch>
       </React.Fragment>
     );
@@ -44,9 +56,10 @@ class Notes extends Component {
 }
 
 const mapStateToProps = state => {
-  const { user } = state;
+  const { user, notes } = state;
   return {
-    user
+    user,
+    notes
   };
 };
 

@@ -1,24 +1,16 @@
 import React, { Component } from "react";
-import { withRouter, Route, Link, Redirect } from "react-router-dom";
+import { withRouter, Route, Link, Redirect, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import { setActiveNote } from "../../../store/action";
 import Form from "./Form";
 class NoteContent extends Component {
+  componentDidUpdate() {
+    console.log(this.props.activeNote);
+  }
   constructor() {
     super();
     this.state = {
       focusElement: "title"
     };
-  }
-  componentDidMount() {
-    this.props.setActiveNote(this.props.match.params.slug);
-  }
-
-  componentDidUpdate(prevProps) {
-    const slug = this.props.match.params.slug;
-    if (prevProps.match.params.slug !== slug) {
-      this.props.setActiveNote(slug);
-    }
   }
 
   focusElementHandler = ele => {
@@ -28,10 +20,10 @@ class NoteContent extends Component {
   };
 
   render() {
-    const url = this.props.match.url;
-    return this.props.activeNote ? (
+    const URL = this.props.match.url;
+    return (
       <div className="note-content">
-        <Link to={`${url}/edit`} className="output-block">
+        <Link to={`${URL}/edit`} className="output-block">
           <h2 onClick={() => this.focusElementHandler("title")}>
             {this.props.activeNote.title}
           </h2>
@@ -39,19 +31,21 @@ class NoteContent extends Component {
             {this.props.activeNote.content}
           </p>
         </Link>
-        <Route
-          path={`${url}/edit`}
-          render={() => (
-            <Form
-              history={this.props.history}
-              focusElement={this.state.focusElement}
-              path={url}
-            />
-          )}
-        />
+        <Switch>
+          <Route
+            path={`${URL}/edit`}
+            render={() => (
+              <Form
+                history={this.props.history}
+                focusElement={this.state.focusElement}
+                path={URL}
+              />
+            )}
+            exact
+          />
+          {/* <Route path={`${url}/:id`} render={() => <Redirect to="/" />} /> */}
+        </Switch>
       </div>
-    ) : (
-      <Redirect to={`/notebook/${this.props.match.params.id}/notes/new`} />
     );
   }
 }
@@ -62,6 +56,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, { setActiveNote })(NoteContent)
-);
+export default withRouter(connect(mapStateToProps)(NoteContent));
