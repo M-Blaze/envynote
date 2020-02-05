@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { withRouter, Route, Link, Redirect, Switch } from "react-router-dom";
+import { withRouter, Route, Link, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import Form from "./Form";
 class NoteContent extends Component {
-  componentDidUpdate() {
-    console.log(this.props.activeNote);
-  }
   constructor() {
     super();
     this.state = {
