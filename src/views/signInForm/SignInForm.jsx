@@ -7,6 +7,7 @@ import Spinner from "../../components/Spinner";
 
 function SignInForm({ signIn, googleLogin, facebookLogin }) {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [input, setInput] = useState({ email: "", password: "" });
   const [error, setError] = useState({ email: false, password: false });
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
@@ -41,6 +42,20 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
     }
   }
 
+  function googleLoginHandler() {
+    setIsRedirecting(true);
+    googleLogin().catch(() => {
+      setIsRedirecting(false);
+    });
+  }
+
+  function facebookLoginHandler(params) {
+    setIsRedirecting(true);
+    facebookLogin().catch(() => {
+      setIsRedirecting(false);
+    });
+  }
+
   function submitHandler(e) {
     e.preventDefault();
     let newErrorObj = Object.entries(input)
@@ -64,10 +79,15 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
       setError(newErrorObj);
     } else {
       setIsProcessing(true);
-      signIn(input.email, input.password).catch(() => {
-        setIsProcessing(false);
-        setDisplayErrorMessage(true);
-      });
+      signIn(input.email, input.password)
+        .then(() => {
+          setIsRedirecting(true);
+        })
+        .catch(() => {
+          setIsRedirecting(false);
+          setIsProcessing(false);
+          setDisplayErrorMessage(true);
+        });
     }
   }
 
@@ -78,7 +98,9 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
     return "invalid-error";
   }
 
-  return (
+  return isRedirecting ? (
+    <Spinner />
+  ) : (
     <div className="log-form-wrapper">
       <div className="form-container log-in-container">
         <form
@@ -90,10 +112,10 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
           <div className="header-block">
             <h1>Login</h1>
             <ul className="social-icons">
-              <li onClick={facebookLogin}>
+              <li onClick={facebookLoginHandler}>
                 <i className="icon-facebook"></i>
               </li>
-              <li onClick={googleLogin}>
+              <li onClick={googleLoginHandler}>
                 <i className="icon-google"></i>
               </li>
             </ul>

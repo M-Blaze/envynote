@@ -10,9 +10,11 @@ export default function SuccessModal() {
           <CloseIcon />
         </Link>
       </div>
-      <h2>Reset Email Succesfully SENT!!!</h2>
-      <p>Please check your mail to reset your password.</p>
-      <Link to="/signin">Return to Login page</Link>
+      <div className="modal-content">
+        <h2>Reset Email Succesfully SENT!!!</h2>
+        <p>Please check your mail to reset your password.</p>
+        <Link to="/signin">Return to Login page</Link>
+      </div>
     </div>
   );
 }
