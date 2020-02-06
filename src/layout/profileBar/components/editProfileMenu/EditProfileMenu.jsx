@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import CustomButton from "../../../../components/customButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
+import Spinner from "../../../../components/Spinner";
 import {
   uploadProfileImage,
   editUsername,
@@ -29,7 +30,6 @@ function EditProfileMenu({
   updatePassword,
   email
 }) {
-  const usernameRef = useRef(null);
   const [isPasswordMenuVisibile, setIsPasswordMenuVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState("");
@@ -38,6 +38,7 @@ function EditProfileMenu({
     currentPassword: "",
     newPassword: ""
   });
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const usernameRegEx = /^[a-z]+[\w_-]+/i;
@@ -48,7 +49,6 @@ function EditProfileMenu({
   }
 
   useEffect(() => {
-    usernameRef.current.focus();
     document.body.addEventListener("click", closePopupConditionally);
     setIsVisible(true);
 
@@ -92,6 +92,7 @@ function EditProfileMenu({
       return;
     }
     if (name === "currentPassword") {
+      setIsPasswordUpdated(false);
       setPassword({ ...password, [name]: value });
     }
     if (name === "newPassword") {
@@ -113,11 +114,14 @@ function EditProfileMenu({
       passwordRegEx.test(newPassword) &&
       passwordRegEx.test(currentPassword)
     ) {
+      setIsProcessing(true);
       updatePassword(currentPassword, newPassword)
         .then(() => {
+          setIsProcessing(false);
           setIsPasswordUpdated("success");
         })
-        .catch(e => {
+        .catch(() => {
+          setIsProcessing(false);
           setIsPasswordUpdated("failure");
         });
     }
@@ -172,7 +176,6 @@ function EditProfileMenu({
             value={username}
             placeholder="Enter a Username"
             spellCheck="false"
-            ref={usernameRef}
           />
         </div>
         {provider === "password" ? (
@@ -227,7 +230,11 @@ function EditProfileMenu({
         <div className="button-group">
           <div className="button">
             <CustomButton type="submit" text="save">
-              <i className="icon-arrow-right"></i>
+              {isProcessing ? (
+                <Spinner />
+              ) : (
+                <i className="icon-arrow-right"></i>
+              )}
             </CustomButton>
           </div>
         </div>

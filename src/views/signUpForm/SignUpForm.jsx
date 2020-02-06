@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signUp } from "../../store/action";
 import ErrorTextBlock from "../../components/ErrorTextBlock";
+import Spinner from "../../components/Spinner";
 
 function SignUpForm({ signUp }) {
   const [input, setInput] = useState({
@@ -11,7 +12,7 @@ function SignUpForm({ signUp }) {
     rePassword: "",
     username: ""
   });
-
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState({
     email: false,
     password: false,
@@ -74,8 +75,10 @@ function SignUpForm({ signUp }) {
     if (Object.keys(newErrorObj).length > 0) {
       setError(newErrorObj);
     } else {
+      setIsProcessing(true);
       const { username, email, password } = input;
       signUp(username, email, password).catch(error => {
+        setIsProcessing(false);
         if (error === "auth/email-already-in-use") {
           setError({ email: "exist-error" });
         }
@@ -180,8 +183,8 @@ function SignUpForm({ signUp }) {
               errorText="Password didn't match..."
             />
           </div>
-          <div className="btn-group">
-            <button>Sign Up</button>
+          <div className="button-block">
+            <button>{isProcessing ? <Spinner /> : "Sign Up"}</button>
           </div>
           <div className="text-block">
             Already have an Account ? <Link to="/signin">Go to Sign In</Link>

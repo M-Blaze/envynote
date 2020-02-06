@@ -5,8 +5,10 @@ import CustomButton from "../../components/customButton";
 import SuccessModal from "./components/successModal";
 import FailureModal from "./components/failureModal";
 import { Link } from "react-router-dom";
+import Spinner from "../../components/Spinner";
 
 function PasswordResetForm({ resetPassword }) {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [email, setEmail] = useState("");
   const [state, setState] = useState({ success: false, failure: false });
   const [error, setError] = useState({
@@ -23,6 +25,7 @@ function PasswordResetForm({ resetPassword }) {
   function inputChangeHandler(e) {
     const { value } = e.target;
     setEmail(value);
+    setIsProcessing(false);
     setError({ emptyError: false, invalidError: false });
   }
 
@@ -38,11 +41,14 @@ function PasswordResetForm({ resetPassword }) {
   function submitHandler(e) {
     e.preventDefault();
     if (emailRegEx.test(email)) {
+      setIsProcessing(true);
       resetPassword(email)
         .then(() => {
+          setIsProcessing(false);
           stateHandler("success", true);
         })
         .catch(() => {
+          setIsProcessing(false);
           stateHandler("failure", true);
         });
       return;
@@ -94,7 +100,7 @@ function PasswordResetForm({ resetPassword }) {
         </div>
         <div className="button-group">
           <CustomButton type="submit" bgColor="#ff4b2b" text="Reset">
-            <i className="icon-arrow-right"></i>
+            {isProcessing ? <Spinner /> : <i className="icon-arrow-right"></i>}
           </CustomButton>
         </div>
         <div className="info-message-block">

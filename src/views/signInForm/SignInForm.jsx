@@ -3,14 +3,17 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signIn, googleLogin, facebookLogin } from "../../store/action";
 import ErrorTextBlock from "../../components/ErrorTextBlock";
+import Spinner from "../../components/Spinner";
 
 function SignInForm({ signIn, googleLogin, facebookLogin }) {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [input, setInput] = useState({ email: "", password: "" });
   const [error, setError] = useState({ email: false, password: false });
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const emailRegEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   function InputChangeHandler(e) {
+    setIsProcessing(false);
     const errorClass = "input-error";
     const { name, value } = e.target;
     setInput({
@@ -60,7 +63,9 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
     if (Object.keys(newErrorObj).length > 0) {
       setError(newErrorObj);
     } else {
+      setIsProcessing(true);
       signIn(input.email, input.password).catch(() => {
+        setIsProcessing(false);
         setDisplayErrorMessage(true);
       });
     }
@@ -131,7 +136,9 @@ function SignInForm({ signIn, googleLogin, facebookLogin }) {
             />
           </div>
           <Link to="/forgot-password">Forgot your password?</Link>
-          <button>Log In</button>
+          <div className="button-block">
+            <button>{isProcessing ? <Spinner /> : "Log In"}</button>
+          </div>
           <div className="text-block">
             Don't have an Account ? <Link to="/signup">Create an Account</Link>{" "}
             within a snap

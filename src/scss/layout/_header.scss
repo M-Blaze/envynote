@@ -275,6 +275,17 @@
   padding-top: 40px;
   width: 280px;
 
+  .spinner {
+    right: 8px;
+    left: auto;
+
+    .MuiCircularProgress-root {
+      height: 20px !important;
+      width: 20px !important;
+      color: $white !important;
+    }
+  }
+
   @include media(">=desktop") {
     width: 450px;
   }
