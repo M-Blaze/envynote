@@ -109,7 +109,6 @@ class Form extends Component {
   calculateHeight = field => {
     field.style.height = "1px";
     const height = field.scrollHeight;
-    console.log(height);
     return height;
   };
 
