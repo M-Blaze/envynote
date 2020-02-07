@@ -47,7 +47,10 @@ function NoteMenu({ deleteNote, horizontal, noteId, ...props }) {
 
   function deleteHandler(id) {
     handleClose();
-    deleteNote(id);
+    const newActiveNoteId = deleteNote(id);
+    if (newActiveNoteId) {
+      history.replace(`/notebooks/${activeNotebook}/notes/${newActiveNoteId}`);
+    }
     if (openSidebar) {
       openSidebar();
     }

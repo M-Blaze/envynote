@@ -37,7 +37,7 @@ function MenuItem(props) {
     if (activeNoteId === "new") {
       return;
     }
-    if (activeNoteId === id) {
+    if (props.activeNote.id === id) {
       return "active";
     }
   }
@@ -88,7 +88,8 @@ function MenuItem(props) {
 
 const mapStateToProps = state => {
   return {
-    notes: state.notes
+    notes: state.notes,
+    activeNote: state.activeNote
   };
 };
 

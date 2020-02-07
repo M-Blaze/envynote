@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { editNote, setActiveNote } from "../../../store/action";
-import TextareaAutosize from "react-textarea-autosize";
 
 class Form extends Component {
   constructor(props) {
@@ -9,15 +8,22 @@ class Form extends Component {
     this.state = {
       title: "",
       content: "",
-      save: false
+      save: false,
+      _isMounted: false
     };
+    this.titleRef = React.createRef();
+    this.contentRef = React.createRef();
   }
 
   componentDidMount() {
+    const titleRef = this.titleRef.current;
+    const contentRef = this.contentRef.current;
+    this.props.toggleIsOutputBlockHidden(true);
+
     if (this.props.focusElement === "content") {
-      this.contentRef.focus();
+      contentRef.focus();
     } else {
-      this.titleRef.focus();
+      titleRef.focus();
     }
     if (Object.keys(this.props.activeNote).length !== 0) {
       const {
@@ -25,22 +31,40 @@ class Form extends Component {
       } = this.props;
       this.setState({
         title,
-        content
+        content,
+        _isMounted: true
       });
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.activeNote.id !== prevProps.activeNote.id) {
-      this.titleRef.focus();
-      const {
-        activeNote: { title, content }
-      } = this.props;
+    const titleRef = this.titleRef.current;
+    const contentRef = this.contentRef.current;
+
+    if (
+      this.props.activeNote.id !== prevProps.activeNote.id &&
+      this.props.activeNote !== ""
+    ) {
+      titleRef.focus();
+      const { title, content } = this.props.activeNote;
       this.setState({
         title,
-        content
+        content,
+        _isMounted: true
       });
+      return;
     }
+
+    if (this.state._isMounted && this.state.title !== "") {
+      titleRef.style.height = titleRef.scrollHeight + "px";
+      contentRef.style.height = contentRef.scrollHeight + "px";
+      this.setState({ _isMounted: false });
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.toggleIsOutputBlockHidden(false);
+    this.setState({ _isMounted: false });
   }
 
   submitHandler = e => {
@@ -52,6 +76,12 @@ class Form extends Component {
       title,
       content
     };
+    if (!title) {
+      newNote.title = "Untitled";
+    }
+    if (!content) {
+      newNote.content = "No Content";
+    }
     this.props.editNote(newNote);
     this.props.setActiveNote(this.props.activeNote.id);
     this.redirectFromEdit();
@@ -63,6 +93,9 @@ class Form extends Component {
 
   changeHandler = e => {
     const target = e.target;
+    const height = this.calculateHeight(target);
+    target.style.height = height + "px";
+
     if (!this.state.save) {
       this.setState({
         save: true
@@ -71,6 +104,13 @@ class Form extends Component {
     this.setState({
       [target.name]: target.value
     });
+  };
+
+  calculateHeight = field => {
+    field.style.height = "1px";
+    const height = field.scrollHeight;
+    console.log(height);
+    return height;
   };
 
   render() {
@@ -82,28 +122,25 @@ class Form extends Component {
         className="edit-form"
       >
         <div className="input-group note-title">
-          <TextareaAutosize
+          <textarea
             type="text"
             name="title"
             spellCheck="false"
-            inputRef={input => {
-              this.titleRef = input;
-            }}
+            ref={this.titleRef}
             onChange={this.changeHandler}
             value={this.state.title}
-          />
+            maxLength="200"
+          ></textarea>
         </div>
         <div className="input-group note-text">
-          <TextareaAutosize
+          <textarea
             type="text"
             name="content"
             spellCheck="false"
-            inputRef={input => {
-              this.contentRef = input;
-            }}
+            ref={this.contentRef}
             onChange={this.changeHandler}
             value={this.state.content}
-          />
+          ></textarea>
         </div>
         <div className="button-group">
           <button className="btn">Cancel</button>

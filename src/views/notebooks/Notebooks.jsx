@@ -36,9 +36,9 @@ class Notebooks extends Component {
   componentDidUpdate(prevProps) {
     if (this._isMounted) {
       const activeNotebookId = this.props.match.params.id;
+      const prevActiveNotebookId = prevProps.match.params.id;
       const userId = this.props.user;
-      if (prevProps.activeNotebook) {
-        const prevActiveNotebookId = prevProps.activeNotebook.id;
+      if (prevActiveNotebookId) {
         if (prevActiveNotebookId !== activeNotebookId) {
           this.setState({
             isFetchingNotes: true
@@ -68,10 +68,9 @@ class Notebooks extends Component {
 }
 
 const mapStateToProps = state => {
-  const { user, defaultNotebookId, activeNotebook } = state;
+  const { user, defaultNotebookId } = state;
   return {
     defaultNotebookId,
-    activeNotebook,
     user
   };
 };

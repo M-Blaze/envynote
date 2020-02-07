@@ -3,8 +3,8 @@ import { withRouter } from "react-router-dom";
 
 class ErrorBoundary extends Component {
   redirectHandler() {
-    // this.props.history.replace("/");
-    // window.location.reload();
+    this.props.history.replace("/");
+    window.location.reload();
   }
 
   constructor(props) {

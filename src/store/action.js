@@ -101,22 +101,19 @@ export const deleteNotebook = (userId, notebookId) => (dispatch, getState) => {
   const newNotebooks = getState().notebooks.filter(
     notebook => notebook.id !== notebookId
   );
-  const newNotes = getState().notes.filter(
-    note => note.notebookId !== notebookId
-  );
   dispatch({
     type: "SET_NOTEBOOKS",
     payload: newNotebooks
   });
-  dispatch({
-    type: "SET_NOTES",
-    payload: newNotes
-  });
+  let newActiveNoteId;
   if (activeNoteId === notebookId) {
+    const newActiveNote = notebooks[targetIndex - 1];
+    newActiveNoteId = newActiveNote.id;
     dispatch({
       type: "SET_ACTIVE_NOTEBOOK",
-      payload: notebooks[targetIndex - 1]
+      payload: newActiveNote
     });
+    return newActiveNoteId;
   }
 };
 
@@ -189,18 +186,24 @@ export const deleteNote = id => (dispatch, getState) => {
   }
   if (activeNote.id === id) {
     const targetIndex = findIndex(notes, note => note.id === id);
+    let newActiveNoteId;
     if (targetIndex === 0) {
+      const newNote = newNotes[0];
+      newActiveNoteId = newNote.id;
       dispatch({
         type: "SET_ACTIVE_NOTE",
-        payload: newNotes[0]
+        payload: newNote
       });
-      return;
+      return newActiveNoteId;
+    } else {
+      const newNote = newNotes[targetIndex - 1];
+      newActiveNoteId = newNote.id;
+      dispatch({
+        type: "SET_ACTIVE_NOTE",
+        payload: newNote
+      });
+      return newActiveNoteId;
     }
-    dispatch({
-      type: "SET_ACTIVE_NOTE",
-      payload: newNotes[targetIndex - 1]
-    });
-    return;
   }
 };
 

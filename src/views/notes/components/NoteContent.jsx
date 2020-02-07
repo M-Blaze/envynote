@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { withRouter, Route, Link, Switch } from "react-router-dom";
+import { withRouter, Route, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Form from "./Form";
+
 class NoteContent extends Component {
   constructor() {
     super();
     this.state = {
-      focusElement: "title"
+      focusElement: "title",
+      isOutputBlockHidden: false
     };
   }
 
@@ -16,32 +18,46 @@ class NoteContent extends Component {
     });
   };
 
+  toggleIsOutputBlockHidden = param => {
+    this.setState({
+      isOutputBlockHidden: param
+    });
+  };
+
+  clickHandler = targetType => {
+    this.toggleIsOutputBlockHidden(true);
+    this.focusElementHandler(targetType);
+  };
+
   render() {
     const URL = this.props.match.url;
     return (
       <div className="note-content">
-        <Link to={`${URL}/edit`} className="output-block">
-          <h2 onClick={() => this.focusElementHandler("title")}>
+        <Link
+          to={`${URL}/edit`}
+          className={`output-block ${
+            this.state.isOutputBlockHidden ? "block-hide" : ""
+          }`}
+        >
+          <h2 onClick={() => this.clickHandler("title")}>
             {this.props.activeNote.title}
           </h2>
-          <p onClick={() => this.focusElementHandler("content")}>
+          <p onClick={() => this.clickHandler("content")}>
             {this.props.activeNote.content}
           </p>
         </Link>
-        <Switch>
-          <Route
-            path={`${URL}/edit`}
-            render={() => (
-              <Form
-                history={this.props.history}
-                focusElement={this.state.focusElement}
-                path={URL}
-              />
-            )}
-            exact
-          />
-          {/* <Route path={`${url}/:id`} render={() => <Redirect to="/" />} /> */}
-        </Switch>
+        <Route
+          path={`${URL}/edit`}
+          render={() => (
+            <Form
+              toggleIsOutputBlockHidden={this.toggleIsOutputBlockHidden}
+              history={this.props.history}
+              focusElement={this.state.focusElement}
+              path={URL}
+            />
+          )}
+          exact
+        />
       </div>
     );
   }

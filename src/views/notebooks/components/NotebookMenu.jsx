@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme =>
 function SimpleMenu({
   deleteNotebook,
   horizontal,
-  activeNotebook,
   inputVal: { id: notebookId, name: notebookName },
   editNotebook,
   history,
@@ -63,8 +62,8 @@ function SimpleMenu({
 
   function deleteHandler(id) {
     handleClose();
-    deleteNotebook(user, id);
-    history.replace(`/notebooks/${activeNotebook.id}`);
+    const newActiveNotebookId = deleteNotebook(user, id);
+    history.replace(`/notebooks/${newActiveNotebookId}`);
     openSidebar();
   }
 
@@ -104,7 +103,6 @@ SimpleMenu.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    activeNotebook: state.activeNotebook,
     user: state.user
   };
 };
