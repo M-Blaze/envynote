@@ -79,7 +79,7 @@ function SignUpForm({ signUp }) {
       const { username, email, password } = input;
       signUp(username, email, password).catch(error => {
         setIsProcessing(false);
-        if (error === "auth/email-already-in-use") {
+        if (error.code === "auth/email-already-in-use") {
           setError({ email: "exist-error" });
         }
       });
@@ -89,6 +89,9 @@ function SignUpForm({ signUp }) {
   function errorType(error) {
     if (error === "empty") {
       return "empty-error";
+    }
+    if (error === "exist-error") {
+      return "exist-error";
     }
     return "invalid-error";
   }

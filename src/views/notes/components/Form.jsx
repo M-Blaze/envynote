@@ -124,7 +124,6 @@ class Form extends Component {
           <textarea
             type="text"
             name="title"
-            spellCheck="false"
             ref={this.titleRef}
             onChange={this.changeHandler}
             value={this.state.title}
@@ -135,7 +134,6 @@ class Form extends Component {
           <textarea
             type="text"
             name="content"
-            spellCheck="false"
             ref={this.contentRef}
             onChange={this.changeHandler}
             value={this.state.content}

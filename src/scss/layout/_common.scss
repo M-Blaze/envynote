@@ -1466,6 +1466,12 @@
         visibility: visible;
       }
     }
+    &.exist-error {
+      .exist-error-text {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
   }
 
   .btn-group {
