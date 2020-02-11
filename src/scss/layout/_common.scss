@@ -1029,6 +1029,8 @@
   color: $black;
   height: calc(100vh - 52px);
   width: 100%;
+  overflow-x: visible;
+  overflow-y: auto;
 
   @include media(">=tablet") {
     flex: 1;
